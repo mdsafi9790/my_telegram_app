@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earning Mini App</title>
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { background: #121212; color: #ffffff; font-family: sans-serif; padding: 15px; margin: 0; }
+        .card { background: #1e1e1e; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; }
+        .btn { background: #2ea6ff; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; }
+        .task-box { display: flex; justify-content: space-between; align-items: center; background: #2a2a2a; padding: 10px; border-radius: 8px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- ইউজার প্রোফাইল ও ব্যালেন্স -->
+    <div class="card" style="text-align: center;">
+        <h3 id="user-name">হ্যালো, ইউজার!</h3>
+        <p style="margin: 5px 0;">আপনার ব্যালেন্স: <span id="balance" style="color: #0088cc; font-size: 20px; font-weight: bold;">0</span> পয়েন্ট</p>
+    </div>
+
+    <!-- চ্যানেল সাবস্ক্রাইব ও লিংক টাস্ক -->
+    <div class="card">
+        <h4 style="margin-top: 0;">📋 চ্যানেল ও ওয়েবসাইট টাস্ক</h4>
+        
+        <div class="task-box">
+            <div>
+                <strong>📢 চ্যানেল সাবস্ক্রাইব</strong><br>
+                <small style="color: #aaa;">+৫০ পয়েন্ট</small>
+            </div>
+            <button class="btn" onclick="openTask('https://t.me/your_channel', 50)">Join</button>
+        </div>
+
+        <div class="task-box">
+            <div>
+                <strong>🌐 ওয়েবসাইট ভিজিট</strong><br>
+                <small style="color: #aaa;">+২০ পয়েন্ট</small>
+            </div>
+            <button class="btn" onclick="openTask('https://google.com', 20)">Visit</button>
+        </div>
+    </div>
+
+    <!-- বিজ্ঞাপন দেখে আয় -->
+    <div class="card" style="text-align: center;">
+        <h4 style="margin-top: 0;">🎬 ভিডিও ও অ্যাডস দেখুন</h4>
+        <p style="font-size: 13px; color: #aaa;">বিজ্ঞাপন দেখে পয়েন্ট ইনকাম করুন</p>
+        <button class="btn" style="background: #27ae60; width: 100%; padding: 12px;" onclick="watchAd()">বিজ্ঞাপন দেখুন (+৩০)</button>
+    </div>
+
+    <!-- গেম সেকশন -->
+    <div class="card" style="text-align: center;">
+        <h4 style="margin-top: 0;">🎮 মিনি গেম</h4>
+        <button class="btn" style="background: #e67e22; width: 100%; padding: 12px;" onclick="playGame()">স্পিন গেম খেলুন 🎰</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // ইউজারের নাম সেট করা
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            document.getElementById("user-name").innerText = "হ্যালো, " + tg.initDataUnsafe.user.first_name + "!";
+        }
+
+        let points = 0;
+
+        // টাস্ক ওপেন করা
+        function openTask(url, reward) {
+            tg.openLink(url);
+            points += reward;
+            document.getElementById("balance").innerText = points;
+            tg.HapticFeedback.impactOccurred('medium');
+        }
+
+        // অ্যাডস দেখার ফাংশন (এখানে আসল অ্যাড নেটওয়ার্ক কোড বসবে)
+        function watchAd() {
+            alert("বিজ্ঞাপন লোড হচ্ছে... (Monetag/AdsGram কোড কানেক্ট করার পর এখানে অ্যাড দেখাবে)");
+            points += 30;
+            document.getElementById("balance").innerText = points;
+            tg.HapticFeedback.impactOccurred('medium');
+        }
+
+        // গেম খেলার ফাংশন
+        function playGame() {
+            alert("গেম পেজ খুলছে...");
+        }
+    </script>
+</body>
+</html>
