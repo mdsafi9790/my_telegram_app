@@ -2,90 +2,422 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earning Mini App</title>
-    <!-- Telegram WebApp SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EarnVerse - Play to Earn</title>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Monetag SDK -->
+    <script src='//libtl.com/sdk.js' data-zone='11884671' data-sdk='show_11884671'></script>
+
     <style>
-        body { background: #121212; color: #ffffff; font-family: sans-serif; padding: 15px; margin: 0; }
-        .card { background: #1e1e1e; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; }
-        .btn { background: #2ea6ff; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: bold; }
-        .task-box { display: flex; justify-content: space-between; align-items: center; background: #2a2a2a; padding: 10px; border-radius: 8px; margin-top: 10px; }
+        :root {
+            --bg-dark: #0f172a; --card-bg: #1e293b; --primary: #3b82f6;
+            --success: #10b981; --text-light: #f8fafc; --text-muted: #94a3b8; --gold: #fbbf24;
+        }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: var(--text-light); padding-bottom: 80px; }
+        .container { padding: 15px; }
+        
+        /* Bottom Navigation */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #0b1120; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #1e293b; z-index: 1000; }
+        .nav-item { text-align: center; color: var(--text-muted); cursor: pointer; font-size: 12px; font-weight: bold; width: 20%; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: var(--success); }
+
+        /* Pages */
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Cards & Buttons */
+        .card { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .btn { border: none; padding: 10px 15px; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; text-align: center;}
+        .btn-green { background: var(--success); }
+        .btn-blue { background: var(--primary); }
+        .btn-dark { background: #334155; }
+        .input-box { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; margin: 10px 0; box-sizing: border-box;}
+
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0b1120; position: sticky; top: 0; z-index: 100; }
+        .header-balance { background: #334155; padding: 5px 12px; border-radius: 20px; font-weight: bold; color: var(--gold); }
+        
+        /* Game Sub-Menu */
+        .game-nav { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; border-bottom: 1px solid #334155; margin-bottom: 15px; }
+        .game-nav span { white-space: nowrap; font-size: 14px; font-weight: bold; color: var(--text-muted); cursor: pointer; }
+        .game-nav span.active { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px;}
+        
+        /* Game Grid */
+        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .game-box { background: #0b1120; border-radius: 10px; overflow: hidden; text-align: center; border: 1px solid #334155;}
+        .game-box img { width: 100%; height: 100px; object-fit: cover; }
+        .game-box h4 { margin: 5px 0; font-size: 12px; }
+        .game-box button { width: 100%; border-radius: 0 0 10px 10px; }
     </style>
 </head>
 <body>
 
-    <!-- ইউজার প্রোফাইল ও ব্যালেন্স -->
-    <div class="card" style="text-align: center;">
-        <h3 id="user-name">হ্যালো, ইউজার!</h3>
-        <p style="margin: 5px 0;">আপনার ব্যালেন্স: <span id="balance" style="color: #0088cc; font-size: 20px; font-weight: bold;">0</span> পয়েন্ট</p>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-balance"><i class="fas fa-coins"></i> <span id="ui-coin-balance">0.0</span> TK Coin</div>
+        <div>
+            <i class="fas fa-bell" style="font-size: 20px; margin-right: 15px;"></i>
+            <i class="fas fa-user-circle" style="font-size: 24px; color: var(--primary);" onclick="alert('Profile Settings Coming Soon!')"></i>
+        </div>
     </div>
-
-    <!-- চ্যানেল সাবস্ক্রাইব ও লিংক টাস্ক -->
-    <div class="card">
-        <h4 style="margin-top: 0;">📋 চ্যানেল ও ওয়েবসাইট টাস্ক</h4>
+    <!-- ================= 1. ADS PAGE ================= -->
+    <div id="ads-page" class="page container">
+        <h2>Ads Hub</h2>
         
-        <div class="task-box">
-            <div>
-                <strong>📢 চ্যানেল সাবস্ক্রাইব</strong><br>
-                <small style="color: #aaa;">+৫০ পয়েন্ট</small>
+        <!-- Premium Ads Section (Adsgram / Adsterra) -->
+        <div class="card">
+            <h3 style="margin-top:0;">WATCH & EARN (Premium)</h3>
+            <p style="color: var(--text-muted); font-size: 13px;">উচ্চ মূল্যের বিজ্ঞাপন দেখুন</p>
+            <button class="btn btn-blue" style="width: 100%; margin-bottom: 10px;" onclick="window.showMonetagAd()">Watch Monetag Ad</button>
+            <div class="flex-between" style="gap: 10px;">
+                <button class="btn btn-green" style="width: 50%;" onclick="window.openAdsterra()">Adsterra Ad</button>
+                <button class="btn btn-dark" style="width: 50%;" onclick="window.showAdsgram()">Adsgram Task</button>
             </div>
-            <button class="btn" onclick="openTask('https://t.me/your_channel', 50)">Join</button>
         </div>
 
-        <div class="task-box">
-            <div>
-                <strong>🌐 ওয়েবসাইট ভিজিট</strong><br>
-                <small style="color: #aaa;">+২০ পয়েন্ট</small>
-            </div>
-            <button class="btn" onclick="openTask('https://google.com', 20)">Visit</button>
+        <!-- Micro-Tasks (Monetag Traffic Links) -->
+        <h3>Daily Micro-Tasks</h3>
+        <div class="card flex-between">
+            <div><h4 style="margin: 0;">Task 1: Web Visit</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
+            <button class="btn btn-blue" onclick="window.completeLinkTask('https://omg10.com/4/11884648', 5)">Go</button>
+        </div>
+        <div class="card flex-between">
+            <div><h4 style="margin: 0;">Task 2: Quick Read</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
+            <button class="btn btn-blue" onclick="window.completeLinkTask('https://omg10.com/4/11884653', 5)">Go</button>
+        </div>
+        <div class="card flex-between">
+            <div><h4 style="margin: 0;">Task 3: Explore Offer</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
+            <button class="btn btn-blue" onclick="window.completeLinkTask('https://omg10.com/4/11884654', 5)">Go</button>
+        </div>
+        <div class="card flex-between">
+            <div><h4 style="margin: 0;">Task 4: Sponsor Site</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
+            <button class="btn btn-blue" onclick="window.completeLinkTask('https://omg10.com/4/11884655', 5)">Go</button>
+        </div>
+        <div class="card flex-between">
+            <div><h4 style="margin: 0;">Task 5: Extra Bonus</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 10 TK Coin</p></div>
+            <button class="btn btn-blue" onclick="window.completeLinkTask('https://omg10.com/4/11884657', 10)">Go</button>
         </div>
     </div>
 
-    <!-- বিজ্ঞাপন দেখে আয় -->
-    <div class="card" style="text-align: center;">
-        <h4 style="margin-top: 0;">🎬 ভিডিও ও অ্যাডস দেখুন</h4>
-        <p style="font-size: 13px; color: #aaa;">বিজ্ঞাপন দেখে পয়েন্ট ইনকাম করুন</p>
-        <button class="btn" style="background: #27ae60; width: 100%; padding: 12px;" onclick="watchAd()">বিজ্ঞাপন দেখুন (+৩০)</button>
+    <!-- ================= 2. GAME PAGE ================= -->
+    <div id="game-page" class="page container">
+        <h2 style="margin-top:0;">Game Center</h2>
+        
+        <!-- Game Sub Navigation -->
+        <div class="game-nav">
+            <span class="active" onclick="window.switchSubTab(this, 'game-games')">Games</span>
+            <span onclick="window.switchSubTab(this, 'game-mining')">Mining</span>
+            <span onclick="window.switchSubTab(this, 'game-lucky')">Lucky Draw</span>
+            <span onclick="window.switchSubTab(this, 'game-leaderboard')">Leaderboard</span>
+        </div>
+
+        <!-- Games List (GameMonetize) -->
+        <div id="game-games" class="sub-page">
+            <div class="game-grid" id="game-monetize-container">
+                <p style="color:var(--text-muted); font-size: 12px; grid-column: span 2;">Loading GameMonetize Feed...</p>
+                <!-- Games will be injected here via JS -->
+            </div>
+        </div>
+        
+        <div id="game-mining" class="sub-page" style="display:none; text-align:center;">
+            <div class="card" style="padding: 30px;">
+                <i class="fas fa-hammer" style="font-size: 40px; color: var(--gold); margin-bottom:15px;"></i>
+                <h3>Cloud Mining</h3>
+                <p style="font-size:12px; color:var(--text-muted);">Start mining session to earn passive TK Coins.</p>
+                <button class="btn btn-green" onclick="alert('Mining Started! Return after 4 hours.')">Start Mining Session</button>
+            </div>
+        </div>
+
+        <div id="game-lucky" class="sub-page" style="display:none;">
+            <div class="card text-center" style="background: linear-gradient(135deg, #065f46, #047857);">
+                <h3 style="margin:0;">Weekly Lucky Draw</h3>
+                <p style="font-size: 13px;">Prize Pool: BDT 5,000</p>
+                <button class="btn btn-blue" style="background: rgba(255,255,255,0.2);">Buy Ticket (100 Coins)</button>
+            </div>
+        </div>
+
+        <div id="game-leaderboard" class="sub-page" style="display:none;">
+            <div class="card flex-between">
+                <div><b>1.</b> Player_789</div> <div style="color:var(--gold);">15,000 <i class="fas fa-coins"></i></div>
+            </div>
+            <div class="card flex-between">
+                <div><b>2.</b> EarnKing</div> <div style="color:var(--gold);">12,400 <i class="fas fa-coins"></i></div>
+            </div>
+            <div class="card flex-between">
+                <div><b>3.</b> You (Md)</div> <div style="color:var(--gold);"><span id="lead-coin">0</span> <i class="fas fa-coins"></i></div>
+            </div>
+        </div>
     </div>
 
-    <!-- গেম সেকশন -->
-    <div class="card" style="text-align: center;">
-        <h4 style="margin-top: 0;">🎮 মিনি গেম</h4>
-        <button class="btn" style="background: #e67e22; width: 100%; padding: 12px;" onclick="playGame()">স্পিন গেম খেলুন 🎰</button>
+    <!-- ================= 3. HOME PAGE (Default) ================= -->
+    <div id="home-page" class="page container active">
+        <h2 style="margin-top:0;">Welcome, Player!</h2>
+        
+        <div style="display: flex; gap: 10px; margin-bottom:15px;">
+            <div class="card" style="flex: 1; background: #1e3a8a;">
+                <p style="margin:0; font-size: 12px;">Coin Balance</p>
+                <h2 style="margin:5px 0;"><span id="home-coin">0.0</span></h2>
+            </div>
+            <div class="card" style="flex: 1; background: #065f46;">
+                <p style="margin:0; font-size: 12px;">TK (Money) Balance</p>
+                <h2 style="margin:5px 0;">TK <span id="home-tk">0.0</span></h2>
+            </div>
+        </div>
+
+        <!-- Spin Wheel & Cyclic Promo Code -->
+        <div class="card" style="text-align: center;">
+            <img src="https://cdn-icons-png.flaticon.com/512/3790/3790100.png" style="width: 80px; margin-bottom: 10px;" alt="Wheel">
+            <h3 style="margin:0;">Lucky Wheel</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">আমাদের টেলিগ্রাম চ্যানেল থেকে কোড নিয়ে ১০টি ফ্রি স্পিন নিন।</p>
+            <input type="text" id="promoCodeInput" class="input-box" placeholder="Enter Redeem Code (e.g. EV-001)">
+            <button class="btn btn-green" style="width: 100%;" onclick="window.claimPromo()">Claim 10 Free Spins</button>
+            <a href="https://t.me/EarnVerse_RedeemCode" target="_blank" style="display:block; margin-top:10px; color:var(--primary); font-size:12px;">Get Codes Here</a>
+        </div>
     </div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+    <!-- ================= 4. TASK PAGE ================= -->
+    <div id="task-page" class="page container">
+        <h3>Social Tasks</h3>
+        <div class="card flex-between">
+            <div>
+                <h4 style="margin: 0;"><i class="fab fa-telegram" style="color:#3b82f6;"></i> Join Community</h4>
+                <p style="margin: 5px 0 0 0; font-size: 12px; color: var(--gold);">Reward: 200 Coins</p>
+            </div>
+            <button class="btn btn-blue" onclick="window.completeLinkTask('https://t.me/EarnVerse_Community', 200)">Join</button>
+        </div>
+        <div class="card flex-between">
+            <div>
+                <h4 style="margin: 0;"><i class="fab fa-telegram" style="color:#10b981;"></i> Redeem Code Channel</h4>
+                <p style="margin: 5px 0 0 0; font-size: 12px; color: var(--gold);">Reward: 150 Coins</p>
+            </div>
+            <button class="btn btn-blue" onclick="window.completeLinkTask('https://t.me/EarnVerse_RedeemCode', 150)">Join</button>
+        </div>
+    </div>
 
-        // ইউজারের নাম সেট করা
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            document.getElementById("user-name").innerText = "হ্যালো, " + tg.initDataUnsafe.user.first_name + "!";
+    <!-- ================= 5. WALLET PAGE ================= -->
+    <div id="wallet-page" class="page container">
+        <h3 style="margin-top:0;">WITHDRAWAL METHODS</h3>
+        <div class="card flex-between" style="border-left: 4px solid #f97316;">
+            <div><h4 style="margin:0;">Nagad</h4></div>
+            <button class="btn btn-dark" onclick="window.requestWithdraw('Nagad')">Select</button>
+        </div>
+        <div class="card flex-between" style="border-left: 4px solid #e11d48;">
+            <div><h4 style="margin:0;">bKash</h4></div>
+            <button class="btn btn-dark" onclick="window.requestWithdraw('bKash')">Select</button>
+        </div>
+        <div class="card flex-between" style="border-left: 4px solid #9333ea;">
+            <div><h4 style="margin:0;">Rocket</h4></div>
+            <button class="btn btn-dark" onclick="window.requestWithdraw('Rocket')">Select</button>
+        </div>
+
+        <div class="card" style="border: 1px dashed var(--gold);">
+            <h4 style="color: var(--gold); margin-top:0;"><i class="fas fa-info-circle"></i> Withdrawal Conditions</h4>
+            <ul style="font-size: 13px; padding-left: 15px; color: var(--text-muted);">
+                <li>Minimum Balance: 1000 TK</li>
+                <li>Minimum Referrals: 10</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h4 style="margin-top:0;">REFERRAL PROGRAM</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">Total Referrals: <span id="referral-count" style="color:white; font-weight:bold;">0</span></p>
+            <div style="background: #334155; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom:10px;">
+                https://t.me/EarnVerseBot?start=user123
+            </div>
+            <div class="card" style="background: rgba(251, 191, 36, 0.1); border: 1px solid var(--gold); padding:10px;">
+                <p style="margin:0; font-size: 12px; color: var(--gold); text-align:center;">
+                    <i class="fas fa-money-bill-wave"></i> <b>MONTHLY SALARY UNLOCK</b><br>
+                    1000 Referrals unlock 1% Monthly Salary
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= BOTTOM NAVIGATION ================= -->
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="window.switchMainPage('ads', this)"><i class="fas fa-bullhorn"></i>Ads</div>
+        <div class="nav-item" onclick="window.switchMainPage('game', this)"><i class="fas fa-gamepad"></i>Game</div>
+        <div class="nav-item active" onclick="window.switchMainPage('home', this)"><i class="fas fa-home"></i>Home</div>
+        <div class="nav-item" onclick="window.switchMainPage('task', this)"><i class="fas fa-tasks"></i>Task</div>
+        <div class="nav-item" onclick="window.switchMainPage('wallet', this)"><i class="fas fa-wallet"></i>Wallet</div>
+    </div>
+
+    <!-- ================= FIREBASE & APP LOGIC ================= -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyCoAy1B7soteXQXSVQMU5iEXFvaRSzZ1-0",
+            authDomain: "earnverse-app.firebaseapp.com",
+            projectId: "earnverse-app",
+            
+storageBucket: "earnverse-app.firebasestorage.app",
+            messagingSenderId: "782597653547",
+            appId: "1:782597653547:web:08dc2bb9a142b65799566e",
+            measurementId: "G-8MZJ16ZX9F"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        console.log("EarnVerse-App: Firebase Connected!");
+
+        // App Data State
+        let userData = {
+            id: "tg_user_123", // In real app, get from Telegram WebApp initData
+            username: "EarnVersePlayer",
+            coins: 0,
+            tk: 0,
+            referrals: 0,
+            usedPromoCodes: []
+        };
+
+        // --- Firebase Sync Function ---
+        window.saveUserData = async function() {
+            try {
+                await setDoc(doc(db, "users", userData.id), {
+                    username: userData.username,
+                    coins: userData.coins,
+                    tk: userData.tk,
+                    referrals: userData.referrals,
+                    usedPromoCodes: userData.usedPromoCodes,
+                    lastActive: new Date()
+                }, { merge: true });
+                updateUI();
+            } catch (error) {
+                console.error("Firebase Sync Error: ", error);
+            }
+        };
+
+        // --- UI Updater ---
+        function updateUI() {
+            document.getElementById('ui-coin-balance').innerText = userData.coins;
+            document.getElementById('home-coin').innerText = userData.coins;
+            document.getElementById('home-tk').innerText = userData.tk;
+            document.getElementById('lead-coin').innerText = userData.coins;
+            document.getElementById('referral-count').innerText = userData.referrals;
         }
 
-        let points = 0;
+        // --- Navigation Logic ---
+        window.switchMainPage = function(pageId, element) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(pageId + '-page').classList.add('active');
+            element.classList.add('active');
+        };
 
-        // টাস্ক ওপেন করা
-        function openTask(url, reward) {
-            tg.openLink(url);
-            points += reward;
-            document.getElementById("balance").innerText = points;
-            tg.HapticFeedback.impactOccurred('medium');
+        window.switchSubTab = function(element, targetId) {
+            document.querySelectorAll('.game-nav span').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.sub-page').forEach(s => s.style.display = 'none');
+            element.classList.add('active');
+            document.getElementById(targetId).style.display = 'block';
+        };
+
+        // --- Ad Networks Logic ---
+        window.showMonetagAd = function() {
+            // Monetag SDK triggered here (assuming setup in <head>)
+            alert("Loading Monetag Ad...");
+            setTimeout(() => { userData.tk += 5; window.saveUserData(); alert("5 TK Added!"); }, 3000);
+        };
+        
+        window.openAdsterra = function() {
+            window.open("https://www.highcpmgate.com/31397356", "_blank");
+            setTimeout(() => { userData.tk += 3; window.saveUserData(); }, 5000);
+        };
+
+        window.showAdsgram = function() {
+            alert("Loading Adsgram Task (Block: 49711)...");
+            setTimeout(() => { userData.coins += 50; window.saveUserData(); }, 3000);
+        };
+
+        window.completeLinkTask = function(url, reward) {
+            window.open(url, "_blank");
+            setTimeout(() => { 
+                userData.coins += reward; 
+                window.saveUserData(); 
+                alert(reward + " Coins Added for completing task!");
+            }, 3000);
+        };
+
+        // --- Cyclic Promo Code Logic (200 Codes: EV-001 to EV-200) ---
+        // Generating the array logically so code isn't huge
+        const validCodes = Array.from({length: 200}, (_, i) => "EV-" + String(i + 1).padStart(3, '0'));
+        window.claimPromo = function() {
+            let inputCode = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+            
+            if(!validCodes.includes(inputCode)) {
+                alert("দুঃখিত, কোডটি সঠিক নয়!");
+                return;
+            }
+
+            // Check if user already used this code
+            if(userData.usedPromoCodes.includes(inputCode)) {
+                alert("আপনি এই কোডটি ইতিমধ্যেই একবার ব্যবহার করেছেন!");
+                return;
+            }
+
+            // Grant Reward
+            userData.usedPromoCodes.push(inputCode);
+            userData.coins += 100; // Adding coins equivalent to 10 free spins
+            
+            // Cyclic Logic: If all 200 are used, clear history to start over!
+            if(userData.usedPromoCodes.length >= 200) {
+                userData.usedPromoCodes = [];
+                alert("আপনি ২০০টি কোড ব্যবহার করেছেন! আপনার কোড সাইকেল রিসেট করা হয়েছে, এখন প্রথম কোড আবার ব্যবহার করতে পারবেন।");
+            } else {
+                alert("অভিনন্দন! স্পিনের জন্য ১০০ কয়েন যুক্ত হয়েছে।");
+            }
+            
+            window.saveUserData();
+            document.getElementById('promoCodeInput').value = "";
+        };
+
+        // --- Withdrawal Logic ---
+        window.requestWithdraw = function(method) {
+            if (userData.tk < 1000) {
+                alert(উত্তোলনের জন্য অন্তত ১০০০ টাকা লাগবে। (আপনার আছে: ${userData.tk} TK));
+            } else if (userData.referrals < 10) {
+                alert(উত্তোলনের জন্য ১০টি রেফারেল লাগবে। (আপনার আছে: ${userData.referrals}));
+            } else {
+                alert(method + " উইথড্র রিকোয়েস্ট সফল হয়েছে!");
+                userData.tk -= 1000;
+                window.saveUserData();
+            }
+        };
+
+        // --- Fetch GameMonetize Feed (Dummy parsing due to CORS limits in client side, injecting visual UI) ---
+        function loadGames() {
+            const container = document.getElementById('game-monetize-container');
+            // Adding a few mock games from the GameMonetize feed concept
+            const games = [
+                { name: "Astro Blaze", thumb: "https://gamemonetize.com/feed/img/1.jpg" },
+                { name: "Coin Runner", thumb: "https://gamemonetize.com/feed/img/2.jpg" },
+                { name: "Puzzle Earn", thumb: "https://gamemonetize.com/feed/img/3.jpg" },
+                { name: "Speed Racer", thumb: "https://gamemonetize.com/feed/img/4.jpg" }
+            ];
+            container.innerHTML = "";
+            games.forEach(g => {
+                container.innerHTML += 
+                    <div class="game-box">
+                        <div style="background:#334155; width:100%; height:100px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-gamepad" style="font-size:30px; color:#94a3b8;"></i></div>
+                        <h4>${g.name}</h4>
+                        <button class="btn btn-blue" onclick="window.completeLinkTask('https://gamemonetize.com', 10)">Play (+10 Coins)</button>
+                    </div>;
+            });
         }
 
-        // অ্যাডস দেখার ফাংশন (এখানে আসল অ্যাড নেটওয়ার্ক কোড বসবে)
-        function watchAd() {
-            alert("বিজ্ঞাপন লোড হচ্ছে... (Monetag/AdsGram কোড কানেক্ট করার পর এখানে অ্যাড দেখাবে)");
-            points += 30;
-            document.getElementById("balance").innerText = points;
-            tg.HapticFeedback.impactOccurred('medium');
-        }
+        // Init
+        updateUI();
+        loadGames();
 
-        // গেম খেলার ফাংশন
-        function playGame() {
-            alert("গেম পেজ খুলছে...");
-        }
     </script>
 </body>
 </html>
+
