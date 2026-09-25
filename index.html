@@ -1,4 +1,169 @@
-001)">
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EarnVerse - Play to Earn</title>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Monetag SDK -->
+    <script src='//libtl.com/sdk.js' data-zone='11884671' data-sdk='show_11884671'></script>
+
+    <style>
+        :root {
+            --bg-dark: #0f172a; --card-bg: #1e293b; --primary: #3b82f6;
+            --success: #10b981; --text-light: #f8fafc; --text-muted: #94a3b8; --gold: #fbbf24;
+        }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: var(--text-light); padding-bottom: 80px; }
+        .container { padding: 15px; }
+        
+        /* Bottom Navigation */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #0b1120; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #1e293b; z-index: 1000; }
+        .nav-item { text-align: center; color: var(--text-muted); cursor: pointer; font-size: 12px; font-weight: bold; width: 20%; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: var(--success); }
+
+        /* Pages */
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Cards & Buttons */
+        .card { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .btn { border: none; padding: 10px 15px; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; text-align: center;}
+        .btn-green { background: var(--success); }
+        .btn-blue { background: var(--primary); }
+        .btn-dark { background: #334155; }
+        .input-box { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; margin: 10px 0; box-sizing: border-box;}
+
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0b1120; position: sticky; top: 0; z-index: 100; }
+        .header-balance { background: #334155; padding: 5px 12px; border-radius: 20px; font-weight: bold; color: var(--gold); }
+        
+        /* Game Sub-Menu */
+        .game-nav { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; border-bottom: 1px solid #334155; margin-bottom: 15px; }
+        .game-nav span { white-space: nowrap; font-size: 14px; font-weight: bold; color: var(--text-muted); cursor: pointer; }
+        .game-nav span.active { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px;}
+        
+        /* Game Grid */
+        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .game-box { background: #0b1120; border-radius: 10px; overflow: hidden; text-align: center; border: 1px solid #334155;}
+        .game-box img { width: 100%; height: 100px; object-fit: cover; }
+        .game-box h4 { margin: 5px 0; font-size: 12px; }
+        .game-box button { width: 100%; border-radius: 0 0 10px 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-balance"><i class="fas fa-coins"></i> <span id="ui-coin-balance">0.0</span> TK Coin</div>
+        <div>
+            <i class="fas fa-bell" style="font-size: 20px; margin-right: 15px;"></i>
+            <i class="fas fa-user-circle" style="font-size: 24px; color: var(--primary);" onclick="alert('Profile Settings Coming Soon!')"></i>
+        </div>
+    </div>
+
+    <!-- ================= 1. ADS PAGE ================= -->
+    <div id="ads-page" class="page container">
+        <h2>Ads Hub</h2>
+        
+        <div class="card">
+            <h3 style="margin-top:0;">WATCH & EARN (Premium)</h3>
+            <p style="color: var(--text-muted); font-size: 13px;">উচ্চ মূল্যের বিজ্ঞাপন দেখুন</p>
+            <button class="btn btn-blue" style="width: 100%; margin-bottom: 10px;" onclick="showMonetagAd()">Watch Monetag Ad</button>
+            <div class="flex-between" style="gap: 10px;">
+                <button class="btn btn-green" style="width: 50%;" onclick="openAdsterra()">Adsterra Ad</button>
+                <button class="btn btn-dark" style="width: 50%;" onclick="showAdsgram()">Adsgram Task</button>
+            </div>
+        </div>
+
+        <h3>Daily Micro-Tasks</h3>
+        <div class="card flex-between">
+            <div><h4 style="margin: 0;">Task 1: Web Visit</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
+            <button class="btn btn-blue" onclick="completeLinkTask('https://omg10.com/4/11884648', 5)">Go</button>
+        </div>
+        <div class="card flex-between">
+            <div><h4 style="margin: 0;">Task 2: Quick Read</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
+            <button class="btn btn-blue" onclick="completeLinkTask('https://omg10.com/4/11884653', 5)">Go</button>
+        </div>
+        <div class="card flex-between">
+            <div><h4 style="margin: 0;">Task 3: Explore Offer</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
+            <button class="btn btn-blue" onclick="completeLinkTask('https://omg10.com/4/11884654', 5)">Go</button>
+        </div>
+        <div class="card flex-between">
+            <div><h4 style="margin: 0;">Task 4: Sponsor Site</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
+            <button class="btn btn-blue" onclick="completeLinkTask('https://omg10.com/4/11884655', 5)">Go</button>
+        </div>
+        <div class="card flex-between">
+            <div><h4 style="margin: 0;">Task 5: Extra Bonus</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 10 TK Coin</p></div>
+            <button class="btn btn-blue" onclick="completeLinkTask('https://omg10.com/4/11884657', 10)">Go</button>
+        </div>
+    </div>
+
+    <!-- ================= 2. GAME PAGE ================= -->
+    <div id="game-page" class="page container">
+        <h2 style="margin-top:0;">Game Center</h2>
+        
+        <div class="game-nav">
+            <span class="active" onclick="switchSubTab(this, 'game-games')">Games</span>
+            <span onclick="switchSubTab(this, 'game-mining')">Mining</span>
+            <span onclick="switchSubTab(this, 'game-lucky')">Lucky Draw</span>
+            <span onclick="switchSubTab(this, 'game-leaderboard')">Leaderboard</span>
+        </div>
+
+        <div id="game-games" class="sub-page">
+            <div class="game-grid" id="game-monetize-container">
+                <!-- Games injected here -->
+            </div>
+        </div>
+        
+        <div id="game-mining" class="sub-page" style="display:none; text-align:center;">
+            <div class="card" style="padding: 30px;">
+                <i class="fas fa-hammer" style="font-size: 40px; color: var(--gold); margin-bottom:15px;"></i>
+                <h3>Cloud Mining</h3>
+                <p style="font-size:12px; color:var(--text-muted);">Start mining session to earn passive TK Coins.</p>
+                <button class="btn btn-green" onclick="alert('Mining Started! Return after 4 hours.')">Start Mining Session</button>
+            </div>
+        </div>
+
+        <div id="game-lucky" class="sub-page" style="display:none;">
+            <div class="card text-center" style="background: linear-gradient(135deg, #065f46, #047857);">
+                <h3 style="margin:0;">Weekly Lucky Draw</h3>
+                <p style="font-size: 13px;">Prize Pool: BDT 5,000</p>
+                <button class="btn btn-blue" style="background: rgba(255,255,255,0.2);">Buy Ticket (100 Coins)</button>
+            </div>
+        </div>
+
+        <div id="game-leaderboard" class="sub-page" style="display:none;">
+            <div class="card flex-between"><div><b>1.</b> Player_789</div> <div style="color:var(--gold);">15,000 <i class="fas fa-coins"></i></div></div>
+            <div class="card flex-between"><div><b>2.</b> EarnKing</div> <div style="color:var(--gold);">12,400 <i class="fas fa-coins"></i></div></div>
+            <div class="card flex-between"><div><b>3.</b> You</div> <div style="color:var(--gold);"><span id="lead-coin">0</span> <i class="fas fa-coins"></i></div></div>
+        </div>
+    </div>
+
+    <!-- ================= 3. HOME PAGE (Default) ================= -->
+    <div id="home-page" class="page container active">
+        <h2 style="margin-top:0;">Welcome, Player!</h2>
+        
+        <div style="display: flex; gap: 10px; margin-bottom:15px;">
+            <div class="card" style="flex: 1; background: #1e3a8a;">
+                <p style="margin:0; font-size: 12px;">Coin Balance</p>
+                <h2 style="margin:5px 0;"><span id="home-coin">0.0</span></h2>
+            </div>
+            <div class="card" style="flex: 1; background: #065f46;">
+                <p style="margin:0; font-size: 12px;">TK (Money) Balance</p>
+                <h2 style="margin:5px 0;">TK <span id="home-tk">0.0</span></h2>
+            </div>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <img src="https://cdn-icons-png.flaticon.com/512/3790/3790100.png" style="width: 80px; margin-bottom: 10px;" alt="Wheel">
+            <h3 style="margin:0;">Lucky Wheel</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">আমাদের টেলিগ্রাম চ্যানেল থেকে কোড নিয়ে ১০টি ফ্রি স্পিন নিন।</p>
+            <input type="text" id="promoCodeInput" class="input-box" placeholder="Enter Redeem Code (e.g. EV-001)">
             <button class="btn btn-green" style="width: 100%;" onclick="claimPromo()">Claim 10 Free Spins</button>
             <a href="https://t.me/EarnVerse_RedeemCode" target="_blank" style="display:block; margin-top:10px; color:var(--primary); font-size:12px;">Get Codes Here</a>
         </div>
@@ -21,7 +186,8 @@
     <div id="wallet-page" class="page container">
         <h3 style="margin-top:0;">WITHDRAWAL METHODS</h3>
         <div class="card flex-between" style="border-left: 4px solid #f97316;">
-            <div><h4 style="margin:0;">Nagad</h4></div><button class="btn btn-dark" onclick="requestWithdraw('Nagad')">Select</button></div>
+            <div><h4 style="margin:0;">Nagad</h4></div><button class="btn btn-dark" onclick="requestWithdraw('Nagad')">Select</button>
+        </div>
         <div class="card flex-between" style="border-left: 4px solid #e11d48;">
             <div><h4 style="margin:0;">bKash</h4></div><button class="btn btn-dark" onclick="requestWithdraw('bKash')">Select</button>
         </div>
@@ -53,12 +219,10 @@
         <div class="nav-item" onclick="switchMainPage('wallet', this)"><i class="fas fa-wallet"></i>Wallet</div>
     </div>
 
-    <!-- ================= SCRIPT 1: UI LOGIC (Safe from Firebase blocks) ================= -->
+    <!-- ================= SCRIPT 1: UI LOGIC ================= -->
     <script>
-        // App Data
         let userData = { id: "user_123", coins: 0, tk: 0, referrals: 0, usedPromoCodes: [] };
 
-        // 1. Navigation Logic (Works instantly)
         function switchMainPage(pageId, element) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -73,7 +237,6 @@
             document.getElementById(targetId).style.display = 'block';
         }
 
-        // 2. UI Update Logic
         function updateUI() {
             document.getElementById('ui-coin-balance').innerText = userData.coins;
             document.getElementById('home-coin').innerText = userData.coins;
@@ -82,15 +245,14 @@
             document.getElementById('referral-count').innerText = userData.referrals;
         }
 
-        // 3. Ad & Task Logic
         function triggerSave() {
-            // This will safely call Firebase if it loaded, otherwise skips
             if(window.saveDataToFirebase) window.saveDataToFirebase();
         }
 
-        function showMonetagAd() {  
+        function showMonetagAd() {
             alert("Loading Monetag Ad...");
-            setTimeout(() => { userData.tk += 5; updateUI(); triggerSave(); alert("5 TK Added!"); }, 3000);}
+            setTimeout(() => { userData.tk += 5; updateUI(); triggerSave(); alert("5 TK Added!"); }, 3000);
+        }
         function openAdsterra() {
             window.open("https://www.highcpmgate.com/31397356", "_blank");
             setTimeout(() => { userData.tk += 3; updateUI(); triggerSave(); }, 5000);
@@ -104,7 +266,6 @@
             setTimeout(() => { userData.coins += reward; updateUI(); triggerSave(); alert(reward + " Coins Added!"); }, 3000);
         }
 
-        // 4. Promo Code Logic
         const validCodes = Array.from({length: 200}, (_, i) => "EV-" + String(i + 1).padStart(3, '0'));
         function claimPromo() {
             let inputCode = document.getElementById('promoCodeInput').value.trim().toUpperCase();
@@ -125,8 +286,8 @@
         }
 
         function requestWithdraw(method) {
-            if (userData.tk < 1000) { alert(উত্তোলনের জন্য অন্তত ১০০০ টাকা লাগবে।); } 
-            else if (userData.referrals < 10) { alert(উত্তোলনের জন্য ১০টি রেফারেল লাগবে।); } 
+            if (userData.tk < 1000) { alert(`উত্তোলনের জন্য অন্তত ১০০০ টাকা লাগবে।`); } 
+            else if (userData.referrals < 10) { alert(`উত্তোলনের জন্য ১০টি রেফারেল লাগবে।`); } 
             else { alert(method + " উইথড্র সফল!"); userData.tk -= 1000; updateUI(); triggerSave(); }
         }
 
@@ -135,19 +296,19 @@
             const games = ["Astro Blaze", "Coin Runner", "Puzzle Earn", "Speed Racer"];
             container.innerHTML = "";
             games.forEach(g => {
-                container.innerHTML += 
+                container.innerHTML += `
                     <div class="game-box">
                         <div style="background:#334155; width:100%; height:100px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-gamepad" style="font-size:30px; color:#94a3b8;"></i></div>
                         <h4>${g}</h4>
                         <button class="btn btn-blue" onclick="completeLinkTask('https://gamemonetize.com', 10)">Play (+10 Coins)</button>
-                    </div>;
+                    </div>`;
             });
         }
 
         updateUI(); loadGames();
     </script>
 
-    <!-- ================= SCRIPT 2: FIREBASE (Isolated) ================= -->
+    <!-- ================= SCRIPT 2: FIREBASE ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -166,8 +327,8 @@
             const db = getFirestore(app);
             console.log("Firebase Connected!");
 
-            // Attach Firebase save function globally so Script 1 can use it
-            window.saveDataToFirebase = async function() {try {
+            window.saveDataToFirebase = async function() {
+                try {
                     await setDoc(doc(db, "users", userData.id), {
                         coins: userData.coins, tk: userData.tk, 
                         usedPromoCodes: userData.usedPromoCodes, lastActive: new Date()
@@ -175,9 +336,8 @@
                 } catch (e) { console.log("Firebase Save Error:", e); }
             };
         } catch (err) {
-            console.log("Firebase Initialization Blocked/Failed, but App UI will continue to work.", err);
+            console.log("Firebase Blocked/Failed, continuing offline.", err);
         }
     </script>
 </body>
 </html>
-    
