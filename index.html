@@ -6,6 +6,7 @@
     <title>EarnVerse - Play to Earn</title>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <!-- Monetag SDK -->
     <script src='//libtl.com/sdk.js' data-zone='11884671' data-sdk='show_11884671'></script>
@@ -219,9 +220,32 @@
         <div class="nav-item" onclick="switchMainPage('wallet', this)"><i class="fas fa-wallet"></i>Wallet</div>
     </div>
 
-    <!-- ================= SCRIPT 1: UI LOGIC ================= -->
+<!-- ================= SCRIPT 1: UI LOGIC & PERMANENT ID ================= -->
     <script>
-        let userData = { id: "user_123", coins: 0, tk: 0, referrals: 0, usedPromoCodes: [] };
+        // ১. ইউজারের জন্য সারাজীবনের স্থায়ী আইডি তৈরি করা (Permanent ID Logic)
+        let currentUserId = localStorage.getItem("earnverse_uid");
+
+        // যদি ইউজার টেলিগ্রাম থেকে অ্যাপ ওপেন করে (টেলিগ্রাম আইডি আজীবন সেম থাকে)
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe?.user) {
+            const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+            currentUserId = "tg_" + tgUser.id; // টেলিগ্রামের অরিজিনাল আইডি
+            localStorage.setItem("earnverse_uid", currentUserId); // ভবিষ্যতের জন্য সেভ করে রাখা
+        } 
+        // যদি টেলিগ্রাম ছাড়া সাধারণ ব্রাউজারে ওপেন করে এবং আগে কোনো আইডি না থাকে
+        else if (!currentUserId) {
+            currentUserId = "web_" + Math.random().toString(36).substring(2, 15) + Date.now();
+            localStorage.setItem("earnverse_uid", currentUserId);
+        }
+
+        // ইউজারের ডিফল্ট ডাটা স্ট্রাকচার
+        let userData = { 
+            id: currentUserId, 
+            username: "Player", 
+            coins: 0, 
+            tk: 0, 
+            referrals: 0, 
+            usedPromoCodes: [] 
+        };
 
         function switchMainPage(pageId, element) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -245,10 +269,12 @@
             document.getElementById('referral-count').innerText = userData.referrals;
         }
 
+        // ডাটা ফায়ারবেসে সেভ করার ট্রিগার
         function triggerSave() {
             if(window.saveDataToFirebase) window.saveDataToFirebase();
         }
 
+        // Ads & Tasks Logic
         function showMonetagAd() {
             alert("Loading Monetag Ad...");
             setTimeout(() => { userData.tk += 5; updateUI(); triggerSave(); alert("5 TK Added!"); }, 3000);
@@ -258,7 +284,7 @@
             setTimeout(() => { userData.tk += 3; updateUI(); triggerSave(); }, 5000);
         }
         function showAdsgram() {
-            alert("Loading Adsgram Task (Block: 49711)...");
+            alert("Loading Adsgram Task...");
             setTimeout(() => { userData.coins += 50; updateUI(); triggerSave(); }, 3000);
         }
         function completeLinkTask(url, reward) {
@@ -266,21 +292,19 @@
             setTimeout(() => { userData.coins += reward; updateUI(); triggerSave(); alert(reward + " Coins Added!"); }, 3000);
         }
 
+        // Promo Code Logic
         const validCodes = Array.from({length: 200}, (_, i) => "EV-" + String(i + 1).padStart(3, '0'));
         function claimPromo() {
             let inputCode = document.getElementById('promoCodeInput').value.trim().toUpperCase();
-            if(!validCodes.includes(inputCode)) { alert("দুঃখিত, কোডটি সঠিক নয়!"); return; }
-            if(userData.usedPromoCodes.includes(inputCode)) { alert("আপনি এই কোডটি ইতিমধ্যেই একবার ব্যবহার করেছেন!"); return; }
+            if(!validCodes.includes(inputCode)) { alert("দুঃখিত, কোডটি সঠিক নয়!"); return; }
+            if(userData.usedPromoCodes.includes(inputCode)) { alert("আপনি এই কোডটি ইতিমধ্যেই ব্যবহার করেছেন!"); return; }
             
             userData.usedPromoCodes.push(inputCode);
             userData.coins += 100; 
             
-            if(userData.usedPromoCodes.length >= 200) {
-                userData.usedPromoCodes = [];
-                alert("আপনার কোড সাইকেল রিসেট করা হয়েছে!");
-            } else {
-                alert("অভিনন্দন! ১০০ কয়েন যুক্ত হয়েছে।");
-            }
+            if(userData.usedPromoCodes.length >= 200) userData.usedPromoCodes = [];
+            alert("অভিনন্দন! ১০০ কয়েন যুক্ত হয়েছে।");
+            
             updateUI(); triggerSave();
             document.getElementById('promoCodeInput').value = "";
         }
@@ -304,14 +328,12 @@
                     </div>`;
             });
         }
-
-        updateUI(); loadGames();
     </script>
 
-    <!-- ================= SCRIPT 2: FIREBASE ================= -->
+    <!-- ================= SCRIPT 2: FIREBASE (LIFETIME DATA LOAD & SAVE) ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyCoAy1B7soteXQXSVQMU5iEXFvaRSzZ1-0",
@@ -325,18 +347,59 @@
         try {
             const app = initializeApp(firebaseConfig);
             const db = getFirestore(app);
-            console.log("Firebase Connected!");
+            console.log("Firebase Connected! User ID:", userData.id);
 
+            // ২. আজীবনের সেভ থাকা ডাটা লোড করার ফাংশন
+            async function loadLifetimeData() {
+                try {
+                    const userRef = doc(db, "users", userData.id);
+                    const userSnap = await getDoc(userRef);
+
+                    if (userSnap.exists()) {
+                        // যদি ডাটাবেসে ইউজারের আগের রেকর্ড থাকে, তবে তা ফিরিয়ে আনা
+                        const savedData = userSnap.data();
+                        userData.coins = savedData.coins || 0;
+                        userData.tk = savedData.tk || 0;
+                        userData.referrals = savedData.referrals || 0;
+                        userData.usedPromoCodes = savedData.usedPromoCodes || [];
+                        console.log("Old Lifetime Data Restored!");
+                    } else {
+                        // নতুন ইউজার হলে ডাটাবেসে খাতা তৈরি করা
+                        console.log("New User Created!");
+                        window.saveDataToFirebase();
+                    }
+                    
+                    updateUI();
+                    loadGames();
+                } catch (e) {
+                    console.error("Data Load Error:", e);
+                    updateUI(); // ডাটা না আসলেও অন্তত অ্যাপ চালু হবে
+                    loadGames();
+                }
+            }
+
+            // অ্যাপ চালুর সাথে সাথে ডাটা লোড শুরু
+            loadLifetimeData();
+
+            // ৩. ব্যালেন্স পরিবর্তন হলে চিরতরে সেভ করার ফাংশন
             window.saveDataToFirebase = async function() {
                 try {
                     await setDoc(doc(db, "users", userData.id), {
-                        coins: userData.coins, tk: userData.tk, 
-                        usedPromoCodes: userData.usedPromoCodes, lastActive: new Date()
+                        coins: userData.coins, 
+                        tk: userData.tk, 
+                        referrals: userData.referrals,
+                        usedPromoCodes: userData.usedPromoCodes,
+                        lastActive: new Date().toISOString() // শেষ কবে ঢুকেছে তার সময়
                     }, { merge: true });
-                } catch (e) { console.log("Firebase Save Error:", e); }
+                } catch (e) { 
+                    console.log("Firebase Save Error:", e); 
+                }
             };
+
         } catch (err) {
-            console.log("Firebase Blocked/Failed, continuing offline.", err);
+            console.log("Firebase Load Failed, continuing offline.", err);
+            updateUI();
+            loadGames();
         }
     </script>
 </body>
