@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EarnVerse - Play to Earn</title>
-    <!-- FontAwesome -->
+    <!-- FontAwesome & Telegram SDK -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
@@ -20,7 +20,8 @@
             --bg-dark: #0f172a; --card-bg: #1e293b; --primary: #3b82f6;
             --success: #10b981; --text-light: #f8fafc; --text-muted: #94a3b8; --gold: #fbbf24;
         }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: var(--text-light); padding-bottom: 80px; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: var(--text-light); padding-bottom: 80px; user-select: none; }
         .container { padding: 15px; }
         
         /* Bottom Navigation */
@@ -41,7 +42,7 @@
         .btn-green { background: var(--success); }
         .btn-blue { background: var(--primary); }
         .btn-dark { background: #334155; }
-        .input-box { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; margin: 10px 0; box-sizing: border-box;}
+        .input-box { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; margin: 10px 0; }
 
         /* Header */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0b1120; position: sticky; top: 0; z-index: 100; }
@@ -58,45 +59,38 @@
         .game-box img { width: 100%; height: 100px; object-fit: cover; }
         .game-box h4 { margin: 5px 0; font-size: 12px; }
         .game-box button { width: 100%; border-radius: 0 0 10px 10px; }
-        /* ============ Ads Page Styling (হুবহু ছবির মতো) ============ */
-.ads-header {
-    background: #0f172a; padding: 15px; text-align: center; color: white;
-}
-.search-bar {
-    width: 90%; padding: 10px; border-radius: 20px; border: none; outline: none; text-align: center; margin-top: 10px; font-size: 14px;
-}
-.categories-hub {
-    background: #dcfce7; padding: 15px; border-radius: 15px; margin: 10px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px;
-}
-.cat-btn {
-    background: white; border: 1px solid #cbd5e1; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; color: #1e293b;
-}
-.cat-btn.active { background: #3b82f6; color: white; border: none; }
 
-/* Ad Gallery Grids */
-.gallery-section { margin: 10px; background: #1e293b; border-radius: 10px; overflow: hidden; border: 1px solid #334155; }
-.gallery-title { background: #334155; padding: 10px; color: white; font-weight: bold; display: flex; justify-content: space-between; font-size: 14px; }
-.ad-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; padding: 10px; }
+        /* ============ Ads Page Styling ============ */
+        .ads-header { background: #0f172a; padding: 15px; text-align: center; color: white; }
+        .search-bar { width: 90%; padding: 10px; border-radius: 20px; border: none; outline: none; text-align: center; margin-top: 10px; font-size: 14px; background: #1e293b; color: white; }
+        .categories-hub { background: #dcfce7; padding: 15px; border-radius: 15px; margin: 10px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px; }
+        .cat-btn { background: white; border: 1px solid #cbd5e1; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; color: #1e293b; }
+        .cat-btn.active { background: #3b82f6; color: white; border: none; }
 
-/* Ad Box Item */
-.ad-box { background: white; border-radius: 8px; overflow: hidden; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-.ad-box-header { background: #1e3a8a; color: white; font-size: 10px; padding: 3px 0; font-weight: bold; }
-.ad-box-img { background: #334155; height: 50px; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
-.ad-box-img i { font-size: 24px; color: rgba(255,255,255,0.7); }
-.ad-box-footer { font-size: 9px; padding: 5px; color: #1e293b; font-weight: bold; line-height: 1.2; }
-.ad-box.claimed .ad-box-img { background: #10b981; }
-.ad-box.claimed .ad-box-header { background: #059669; }
+        /* Ad Gallery Grids */
+        .gallery-section { margin: 10px; background: #1e293b; border-radius: 10px; overflow: hidden; border: 1px solid #334155; }
+        .gallery-title { background: #334155; padding: 10px; color: white; font-weight: bold; display: flex; justify-content: space-between; font-size: 14px; }
+        .ad-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; padding: 10px; }
 
-@media (max-width: 400px) {
-    .ad-grid { grid-template-columns: repeat(3, 1fr); }
-}
+        /* Ad Box Item */
+        .ad-box { background: white; border-radius: 8px; overflow: hidden; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .ad-box-header { background: #1e3a8a; color: white; font-size: 10px; padding: 3px 0; font-weight: bold; }
+        .ad-box-img { background: #334155; height: 50px; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+        .ad-box-img i { font-size: 24px; color: rgba(255,255,255,0.7); }
+        .ad-box-footer { font-size: 9px; padding: 5px; color: #1e293b; font-weight: bold; line-height: 1.2; }
+        .ad-box.claimed .ad-box-img { background: #10b981; }
+        .ad-box.claimed .ad-box-header { background: #059669; }
+
+        @media (max-width: 400px) {
+            .ad-grid { grid-template-columns: repeat(3, 1fr); }
+        }
     </style>
 </head>
 <body>
 
     <!-- Header -->
     <div class="header">
-        <div class="header-balance"><i class="fas fa-coins"></i> <span id="ui-coin-balance">0.0</span> TK Coin</div>
+        <div class="header-balance"><i class="fas fa-coins"></i> <span id="ui-coin-balance">0</span> Coins</div>
         <div>
             <i class="fas fa-bell" style="font-size: 20px; margin-right: 15px;"></i>
             <i class="fas fa-user-circle" style="font-size: 24px; color: var(--primary);" onclick="alert('Profile Settings Coming Soon!')"></i>
@@ -104,62 +98,59 @@
     </div>
 
     <!-- ================= 1. ADS PAGE ================= -->
-<!-- Ads & Categories Hub Page -->
-<div id="ads-page" class="page">
-    <div class="ads-header">
-        <h2>Ads & Categories Hub</h2>
-        <input type="text" class="search-bar" placeholder="Search...">
-    </div>
-
-    <!-- Top Categories -->
-    <div class="categories-hub">
-        <button class="cat-btn active" onclick="switchAdTab('main-ads-content', this)"><i class="fas fa-th"></i> Daily Ads</button>
-        <button class="cat-btn" onclick="switchAdTab('entertainment-content', this)"><i class="fas fa-video"></i> Entertainment</button>
-        <button class="cat-btn" onclick="switchAdTab('microtask-content', this)"><i class="fas fa-tasks"></i> Micro-Tasks</button>
-    </div>
-
-    <!-- 1. Main Ads Content (30 Boxes) -->
-    <div id="main-ads-content" class="ad-tab-content">
-        <!-- Monetag Gallery -->
-        <div class="gallery-section">
-            <div class="gallery-title"><span><i class="fas fa-list"></i> Daily Ad Gallery (Monetag)</span> <i class="fas fa-chart-bar"></i></div>
-            <div class="ad-grid" id="monetag-grid"></div>
+    <div id="ads-page" class="page">
+        <div class="ads-header">
+            <h2>Ads & Categories Hub</h2>
+            <input type="text" class="search-bar" placeholder="Search...">
         </div>
-        <!-- Adsterra Gallery -->
-        <div class="gallery-section">
-            <div class="gallery-title"><span><i class="fas fa-list"></i> Daily Ad Gallery 2 (Adsterra)</span> <i class="fas fa-chart-bar"></i></div>
-            <div class="ad-grid" id="adsterra-grid"></div>
-        </div>
-        <!-- Adsgram Gallery -->
-        <div class="gallery-section">
-            <div class="gallery-title"><span><i class="fas fa-list"></i> Daily Ad Gallery 3 (Adsgram)</span> <i class="fas fa-chart-bar"></i></div>
-            <div class="ad-grid" id="adsgram-grid"></div>
-        </div>
-    </div>
 
-    <!-- 2. Entertainment Content (Reels) -->
-    <div id="entertainment-content" class="ad-tab-content" style="display: none; padding: 15px;">
-        <h3 style="color: white;">Watch Reels & Earn</h3>
-        <div class="gallery-section" style="padding: 15px; text-align: center;">
-            <i class="fas fa-play-circle" style="font-size: 50px; color: #ef4444; margin-bottom: 10px;"></i>
-            <p style="color: white; margin-bottom: 15px;">প্রতিটি রিলস দেখলে পাবেন ১০০ কয়েন!</p>
-            <button class="btn btn-green" onclick="watchReelsTask()">Watch Reel (+100 Coins)</button>
+        <!-- Top Categories -->
+        <div class="categories-hub">
+            <button class="cat-btn active" onclick="switchAdTab('main-ads-content', this)"><i class="fas fa-th"></i> Daily Ads</button>
+            <button class="cat-btn" onclick="switchAdTab('entertainment-content', this)"><i class="fas fa-video"></i> Entertainment</button>
+            <button class="cat-btn" onclick="switchAdTab('microtask-content', this)"><i class="fas fa-tasks"></i> Micro-Tasks</button>
         </div>
-    </div>
 
-    <!-- 3. Micro-Tasks Content -->
+        <!-- 1. Main Ads Content (30 Boxes) -->
+        <div id="main-ads-content" class="ad-tab-content">
+            <div class="gallery-section">
+                <div class="gallery-title"><span><i class="fas fa-list"></i> Daily Ad Gallery (Monetag)</span> <i class="fas fa-chart-bar"></i></div>
+                <div class="ad-grid" id="monetag-grid"></div>
+            </div>
+            <div class="gallery-section">
+                <div class="gallery-title"><span><i class="fas fa-list"></i> Daily Ad Gallery 2 (Adsterra)</span> <i class="fas fa-chart-bar"></i></div>
+                <div class="ad-grid" id="adsterra-grid"></div>
+            </div>
+            <div class="gallery-section">
+                <div class="gallery-title"><span><i class="fas fa-list"></i> Daily Ad Gallery 3 (Adsgram)</span> <i class="fas fa-chart-bar"></i></div>
+                <div class="ad-grid" id="adsgram-grid"></div>
+            </div>
+        </div>
+
+        <!-- 2. Entertainment Content (Reels) -->
+        <div id="entertainment-content" class="ad-tab-content" style="display: none; padding: 15px;">
+            <h3 style="color: white;">Watch Reels & Earn</h3>
+            <div class="gallery-section" style="padding: 15px; text-align: center;">
+                <i class="fas fa-play-circle" style="font-size: 50px; color: #ef4444; margin-bottom: 10px;"></i>
+                <p style="color: white; margin-bottom: 15px;">প্রতিটি রিলস দেখলে পাবেন ১০০ কয়েন!</p>
+                <button class="btn btn-green" onclick="watchReelsTask()">Watch Reel (+100 Coins)</button>
+            </div>
+        </div>
+
+        <!-- 3. Micro-Tasks Content -->
         <div id="microtask-content" class="ad-tab-content" style="display: none; padding: 15px;">
             <h3 style="color: white; text-align: center;">Micro Tasks (Monetag)</h3>
             <p style="color: #94a3b8; font-size: 13px; text-align: center; margin-bottom: 15px;">নিচের লিংকগুলোতে ক্লিক করে ১৫ সেকেন্ড অপেক্ষা করুন এবং টাস্ক কমপ্লিট করুন।</p>
             
             <div class="gallery-section" style="padding: 15px; display: flex; flex-direction: column; gap: 10px;">
-                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884648', 1)"><i class="fas fa-link"></i> Task 1 (Click Here)</button>
-                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884653', 2)"><i class="fas fa-link"></i> Task 2 (Click Here)</button>
-                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884654', 3)"><i class="fas fa-link"></i> Task 3 (Click Here)</button>
-                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884655', 4)"><i class="fas fa-link"></i> Task 4 (Click Here)</button>
-                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884657', 5)"><i class="fas fa-link"></i> Task 5 (Click Here)</button>
+                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884648', 1)"><i class="fas fa-link"></i> Task 1 (+50 Coins)</button>
+                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884653', 2)"><i class="fas fa-link"></i> Task 2 (+50 Coins)</button>
+                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884654', 3)"><i class="fas fa-link"></i> Task 3 (+50 Coins)</button>
+                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884655', 4)"><i class="fas fa-link"></i> Task 4 (+50 Coins)</button>
+                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884657', 5)"><i class="fas fa-link"></i> Task 5 (+50 Coins)</button>
             </div>
         </div>
+    </div>
 
     <!-- ================= 2. GAME PAGE ================= -->
     <div id="game-page" class="page container">
@@ -173,9 +164,7 @@
         </div>
 
         <div id="game-games" class="sub-page">
-            <div class="game-grid" id="game-monetize-container">
-                <!-- Games injected here -->
-            </div>
+            <div class="game-grid" id="game-monetize-container"></div>
         </div>
         
         <div id="game-mining" class="sub-page" style="display:none; text-align:center;">
@@ -202,27 +191,27 @@
         </div>
     </div>
 
-    <!-- ================= 3. HOME PAGE (Default) ================= -->
+    <!-- ================= 3. HOME PAGE (Default Active) ================= -->
     <div id="home-page" class="page container active">
         <h2 style="margin-top:0;">Welcome, Player!</h2>
         
         <div style="display: flex; gap: 10px; margin-bottom:15px;">
             <div class="card" style="flex: 1; background: #1e3a8a;">
                 <p style="margin:0; font-size: 12px;">Coin Balance</p>
-                <h2 style="margin:5px 0;"><span id="home-coin">0.0</span></h2>
+                <h2 style="margin:5px 0;"><span id="home-coin">0</span></h2>
             </div>
             <div class="card" style="flex: 1; background: #065f46;">
-                <p style="margin:0; font-size: 12px;">TK (Money) Balance</p>
-                <h2 style="margin:5px 0;">TK <span id="home-tk">0.0</span></h2>
+                <p style="margin:0; font-size: 12px;">TK Balance</p>
+                <h2 style="margin:5px 0;">TK <span id="home-tk">0.00</span></h2>
             </div>
         </div>
 
         <div class="card" style="text-align: center;">
             <img src="https://cdn-icons-png.flaticon.com/512/3790/3790100.png" style="width: 80px; margin-bottom: 10px;" alt="Wheel">
             <h3 style="margin:0;">Lucky Wheel</h3>
-            <p style="font-size: 12px; color: var(--text-muted);">আমাদের টেলিগ্রাম চ্যানেল থেকে কোড নিয়ে ১০টি ফ্রি স্পিন নিন।</p>
+            <p style="font-size: 12px; color: var(--text-muted);">আমাদের টেলিগ্রাম চ্যানেল থেকে কোড নিয়ে ফ্রি কয়েন নিন।</p>
             <input type="text" id="promoCodeInput" class="input-box" placeholder="Enter Redeem Code (e.g. EV-001)">
-            <button class="btn btn-green" style="width: 100%;" onclick="claimPromo()">Claim 10 Free Spins</button>
+            <button class="btn btn-green" style="width: 100%;" onclick="claimPromo()">Claim Reward</button>
             <a href="https://t.me/EarnVerse_RedeemCode" target="_blank" style="display:block; margin-top:10px; color:var(--primary); font-size:12px;">Get Codes Here</a>
         </div>
     </div>
@@ -256,7 +245,7 @@
         <div class="card">
             <h4 style="margin-top:0;">REFERRAL PROGRAM</h4>
             <p style="font-size: 12px; color: var(--text-muted);">Total Referrals: <span id="referral-count" style="color:white; font-weight:bold;">0</span></p>
-            <div style="background: #334155; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom:10px;">
+            <div style="background: #334155; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom:10px; word-break: break-all;">
                 https://t.me/EarnVerseBot?start=user123
             </div>
             <div class="card" style="background: rgba(251, 191, 36, 0.1); border: 1px solid var(--gold); padding:10px;">
@@ -277,34 +266,38 @@
         <div class="nav-item" onclick="switchMainPage('wallet', this)"><i class="fas fa-wallet"></i>Wallet</div>
     </div>
 
-<!-- ================= SCRIPT 1: UI LOGIC & PERMANENT ID ================= -->
+    <!-- ================= SCRIPT 1: APP LOGIC & UI HANDLER ================= -->
     <script>
-        // ১. ইউজারের জন্য সারাজীবনের স্থায়ী আইডি তৈরি করা (Permanent ID Logic)
+        // ১. টেলিগ্রাম SDK ইনিশিয়ালাইজেশন (অ্যাপ ফুলস্ক্রিন করার জন্য)
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
+
+        // ২. ইউজার আইডি হ্যান্ডলিং
         let currentUserId = localStorage.getItem("earnverse_uid");
 
-        // যদি ইউজার টেলিগ্রাম থেকে অ্যাপ ওপেন করে (টেলিগ্রাম আইডি আজীবন সেম থাকে)
         if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe?.user) {
             const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
-            currentUserId = "tg_" + tgUser.id; // টেলিগ্রামের অরিজিনাল আইডি
-            localStorage.setItem("earnverse_uid", currentUserId); // ভবিষ্যতের জন্য সেভ করে রাখা
-        } 
-        // যদি টেলিগ্রাম ছাড়া সাধারণ ব্রাউজারে ওপেন করে এবং আগে কোনো আইডি না থাকে
-        else if (!currentUserId) {
+            currentUserId = "tg_" + tgUser.id;
+            localStorage.setItem("earnverse_uid", currentUserId);
+        } else if (!currentUserId) {
             currentUserId = "web_" + Math.random().toString(36).substring(2, 15) + Date.now();
             localStorage.setItem("earnverse_uid", currentUserId);
         }
 
-        // ইউজারের ডিফল্ট ডাটা স্ট্রাকচার
-        let userData = { 
-    id: currentUserId, 
-    username: "Player", 
-    coins: 0, 
-    tk: 0, 
-    referrals: 0, 
-    usedPromoCodes: [],
-    adCooldowns: {} // এটি নতুন যুক্ত হলো ২৪ ঘণ্টার হিসাব রাখার জন্য
-};
+        // ইউজারের ডাটা অবজেক্ট
+        var userData = { 
+            id: currentUserId, 
+            username: "Player", 
+            coins: 0, 
+            tk: 0, 
+            referrals: 0, 
+            usedPromoCodes: [],
+            adCooldowns: {}
+        };
 
+        // পেজ নেভিগেশন
         function switchMainPage(pageId, element) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -319,38 +312,114 @@
             document.getElementById(targetId).style.display = 'block';
         }
 
+        function switchAdTab(targetId, btn) {
+            document.querySelectorAll('.ad-tab-content').forEach(tab => tab.style.display = 'none');
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(targetId).style.display = 'block';
+            btn.classList.add('active');
+        }
+
         function updateUI() {
             document.getElementById('ui-coin-balance').innerText = userData.coins;
             document.getElementById('home-coin').innerText = userData.coins;
-            document.getElementById('home-tk').innerText = userData.tk;
+            document.getElementById('home-tk').innerText = (userData.tk || 0).toFixed(2);
             document.getElementById('lead-coin').innerText = userData.coins;
             document.getElementById('referral-count').innerText = userData.referrals;
         }
 
-        // ডাটা ফায়ারবেসে সেভ করার ট্রিগার
         function triggerSave() {
-            if(window.saveDataToFirebase) window.saveDataToFirebase();
+            if (window.saveDataToFirebase) window.saveDataToFirebase();
         }
 
-        // Ads & Tasks Logic
-        function showMonetagAd() {
-            alert("Loading Monetag Ad...");
-            setTimeout(() => { userData.tk += 5; updateUI(); triggerSave(); alert("5 TK Added!"); }, 3000);
+        // ৩০টি অ্যাড বক্স তৈরি করার ফাংশন
+        function renderAdBoxes() {
+            const monetagGrid = document.getElementById('monetag-grid');
+            const adsterraGrid = document.getElementById('adsterra-grid');
+            const adsgramGrid = document.getElementById('adsgram-grid');
+            
+            if(!monetagGrid) return;
+            monetagGrid.innerHTML = ''; adsterraGrid.innerHTML = ''; adsgramGrid.innerHTML = '';
+
+            for (let i = 1; i <= 30; i++) {
+                let network = i <= 10 ? 'Monetag' : (i <= 20 ? 'Adsterra' : 'Adsgram');
+
+                let lastWatched = (userData.adCooldowns && userData.adCooldowns['box_' + i]) || 0;
+                let isClaimed = (Date.now() - lastWatched) < (24 * 60 * 60 * 1000); // 24 Hours Lock
+
+                let boxHTML = `
+                    <div class="ad-box ${isClaimed ? 'claimed' : ''}" id="box-ui-${i}">
+                        <div class="ad-box-header">Box ${i}</div>
+                        <div class="ad-box-img" onclick="${isClaimed ? 'showCooldownAlert()' : `startAdWatch(${i}, '${network}')`}">
+                            <i class="fas ${isClaimed ? 'fa-check-circle' : 'fa-play-circle'}"></i>
+                        </div>
+                        <div class="ad-box-footer" id="box-txt-${i}">${isClaimed ? 'Claimed<br>(Wait 24h)' : 'Watch Ads<br>+0.50 TK'}</div>
+                    </div>
+                `;
+
+                if (i <= 10) monetagGrid.innerHTML += boxHTML;
+                else if (i <= 20) adsterraGrid.innerHTML += boxHTML;
+                else adsgramGrid.innerHTML += boxHTML;
+            }
         }
-        function openAdsterra() {
-            window.open("https://www.highcpmgate.com/31397356", "_blank");
-            setTimeout(() => { userData.tk += 3; updateUI(); triggerSave(); }, 5000);
+
+        // অ্যাড দেখা ও ১৫ সেকেন্ডের টাইমার
+        function startAdWatch(boxNum, network) {
+            document.getElementById(`box-txt-${boxNum}`).innerHTML = "Watching...<br>15s";
+
+            if (network === 'Monetag') {
+                if (typeof show_11884671 === 'function') { show_11884671(); }
+                else { alert("Monetag অ্যাড লোড হচ্ছে না।"); return; }
+            } 
+            else if (network === 'Adsterra') {
+                window.open("https://www.highcpmgate.com/31397356", "_blank");
+            } 
+            else if (network === 'Adsgram') {
+                if (window.Adsgram) {
+                    const AdController = window.Adsgram.init({ blockId: "49711" });
+                    AdController.show().catch((err) => console.log("Adsgram Error: ", err));
+                } else { alert("Adsgram লোড হতে সমস্যা হচ্ছে।"); return; }
+            }
+
+            setTimeout(() => {
+                userData.tk = (userData.tk || 0) + 0.50;
+                if(!userData.adCooldowns) userData.adCooldowns = {};
+                userData.adCooldowns['box_' + boxNum] = Date.now();
+                
+                updateUI(); 
+                triggerSave();
+                
+                alert(`Box ${boxNum} দেখা সম্পন্ন! ০.৫০ টাকা যোগ হয়েছে।`);
+                renderAdBoxes();
+            }, 15000); 
         }
-        function showAdsgram() {
-            alert("Loading Adsgram Task...");
-            setTimeout(() => { userData.coins += 50; updateUI(); triggerSave(); }, 3000);
+
+        function showCooldownAlert() { alert("আপনি এটি ইতিমধ্যে দেখেছেন। ২৪ ঘণ্টা পর আবার দেখতে পারবেন।"); }
+
+        function watchReelsTask() {
+            window.open('https://youtube.com/shorts/', '_blank'); 
+            setTimeout(() => {
+                userData.coins += 100; updateUI(); triggerSave();
+                alert("Reel দেখা সম্পন্ন! ১০০ কয়েন যোগ হয়েছে।");
+            }, 15000);
         }
+
+        function completeMicroTask(url, taskNum) {
+            window.open(url, '_blank');
+            setTimeout(() => {
+                userData.coins += 50; updateUI(); triggerSave();
+                alert(`Task ${taskNum} কমপ্লিট! ৫০ কয়েন যোগ হয়েছে।`);
+            }, 15000);
+        }
+
         function completeLinkTask(url, reward) {
             window.open(url, "_blank");
-            setTimeout(() => { userData.coins += reward; updateUI(); triggerSave(); alert(reward + " Coins Added!"); }, 3000);
+            setTimeout(() => { 
+                userData.coins += reward; updateUI(); triggerSave(); 
+                alert(reward + " Coins Added!"); 
+            }, 3000);
         }
 
-        // Promo Code Logic
+        // Promo Code System
         const validCodes = Array.from({length: 200}, (_, i) => "EV-" + String(i + 1).padStart(3, '0'));
         function claimPromo() {
             let inputCode = document.getElementById('promoCodeInput').value.trim().toUpperCase();
@@ -359,8 +428,6 @@
             
             userData.usedPromoCodes.push(inputCode);
             userData.coins += 100; 
-            
-            if(userData.usedPromoCodes.length >= 200) userData.usedPromoCodes = [];
             alert("অভিনন্দন! ১০০ কয়েন যুক্ত হয়েছে।");
             
             updateUI(); triggerSave();
@@ -375,6 +442,7 @@
 
         function loadGames() {
             const container = document.getElementById('game-monetize-container');
+            if(!container) return;
             const games = ["Astro Blaze", "Coin Runner", "Puzzle Earn", "Speed Racer"];
             container.innerHTML = "";
             games.forEach(g => {
@@ -386,113 +454,14 @@
                     </div>`;
             });
         }
-        // ================= ADS LOGIC (WITH REAL IDs) =================
 
-function switchAdTab(targetId, btn) {
-    document.querySelectorAll('.ad-tab-content').forEach(tab => tab.style.display = 'none');
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(targetId).style.display = 'block';
-    btn.classList.add('active');
-}
-
-function renderAdBoxes() {
-    const monetagGrid = document.getElementById('monetag-grid');
-    const adsterraGrid = document.getElementById('adsterra-grid');
-    const adsgramGrid = document.getElementById('adsgram-grid');
-    
-    if(!monetagGrid) return;
-    monetagGrid.innerHTML = ''; adsterraGrid.innerHTML = ''; adsgramGrid.innerHTML = '';
-
-    for (let i = 1; i <= 30; i++) {
-        // প্রথম ১০টি Monetag, পরের ১০টি Adsterra, শেষের ১০টি Adsgram
-        let network = i <= 10 ? 'Monetag' : (i <= 20 ? 'Adsterra' : 'Adsgram');
-
-        let lastWatched = userData.adCooldowns['box_' + i] || 0;
-        let isClaimed = (Date.now() - lastWatched) < (24 * 60 * 60 * 1000); // ২৪ ঘণ্টার লক
-
-        let boxHTML = `
-            <div class="ad-box ${isClaimed ? 'claimed' : ''}" id="box-ui-${i}">
-                <div class="ad-box-header">Box ${i}</div>
-                <div class="ad-box-img" onclick="${isClaimed ? 'showCooldownAlert()' : `startAdWatch(${i}, '${network}')`}">
-                    <i class="fas ${isClaimed ? 'fa-check-circle' : 'fa-play-circle'}"></i>
-                </div>
-                <div class="ad-box-footer" id="box-txt-${i}">${isClaimed ? 'Claimed<br>(Wait 24h)' : 'Watch Ads<br>+0.50 TK'}</div>
-            </div>
-        `;
-
-        if (i <= 10) monetagGrid.innerHTML += boxHTML;
-        else if (i <= 20) adsterraGrid.innerHTML += boxHTML;
-        else adsgramGrid.innerHTML += boxHTML;
-    }
-}
-
-// অ্যাড দেখা ও ১৫ সেকেন্ডের টাইমার
-function startAdWatch(boxNum, network) {
-    document.getElementById(`box-txt-${boxNum}`).innerHTML = "Watching...<br>15s";
-
-    // আপনার আসল অ্যাড ট্রিগার করা
-    if (network === 'Monetag') {
-        if (typeof show_11884671 === 'function') {
-            show_11884671(); // Monetag SDK Trigger
-        } else {
-            alert("অ্যাড লোড হচ্ছে না। একটু পর আবার চেষ্টা করুন।");
-            return;
-        }
-    } 
-    else if (network === 'Adsterra') {
-        window.open("https://www.highcpmgate.com/31397356", "_blank"); // Adsterra Smart Link
-    } 
-    else if (network === 'Adsgram') {
-        if (window.Adsgram) {
-            const AdController = window.Adsgram.init({ blockId: "49711" }); // Adsgram Block ID
-            AdController.show().catch((err) => console.log("Adsgram Error: ", err));
-        } else {
-            alert("Adsgram লোড হতে সমস্যা হচ্ছে।");
-            return;
-        }
-    }
-
-    // ১৫ সেকেন্ডের টাইমার ও টাকা যুক্ত করা
-    setTimeout(() => {
-        userData.tk += 0.50; // ০.৫০ টাকা যুক্ত হলো
-        userData.adCooldowns['box_' + boxNum] = Date.now(); // দেখার সময় সেভ হলো
-        
-        updateUI(); 
-        if(window.saveDataToFirebase) window.saveDataToFirebase();
-        
-        alert(`Box ${boxNum} দেখা সম্পন্ন! ০.৫০ টাকা যোগ হয়েছে।`);
-        renderAdBoxes(); // বক্সটি সবুজ করার জন্য রিফ্রেশ
-    }, 15000); 
-}
-
-function showCooldownAlert() { alert("আপনি এটি ইতিমধ্যে দেখেছেন। ২৪ ঘণ্টা পর আবার দেখতে পারবেন।"); }
-
-function watchReelsTask() {
-    // এখানে আপনার রিলসের লিংক বসাবেন
-    window.open('https://youtube.com/shorts/', '_blank'); 
-    setTimeout(() => {
-        userData.coins += 100; updateUI(); 
-        if(window.saveDataToFirebase) window.saveDataToFirebase();
-        alert("Reel দেখা সম্পন্ন! ১০০ কয়েন যোগ হয়েছে।");
-    }, 15000);
-}
-
-// Micro Task কমপ্লিট করার ফাংশন
-function completeMicroTask(url, taskNum) {
-    window.open(url, '_blank');
-    setTimeout(() => {
-        userData.coins += 50; // টাস্কের জন্য ৫০ কয়েন 
-        updateUI(); 
-        if(window.saveDataToFirebase) window.saveDataToFirebase();
-        alert(`Task ${taskNum} কমপ্লিট! 50 Coins যোগ হয়েছে।`);
-    }, 15000);
-}
-
-// অ্যাপ চালু হলে বক্সগুলো লোড করার জন্য
-window.onload = () => { setTimeout(() => { renderAdBoxes(); }, 1500); };
+        // অ্যাপ চালুর সাথে সাথে UI তৈরি করা
+        updateUI();
+        renderAdBoxes();
+        loadGames();
     </script>
 
-    <!-- ================= SCRIPT 2: FIREBASE (LIFETIME DATA LOAD & SAVE) ================= -->
+    <!-- ================= SCRIPT 2: FIREBASE PERSISTENT DATABASE ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -509,42 +478,38 @@ window.onload = () => { setTimeout(() => { renderAdBoxes(); }, 1500); };
         try {
             const app = initializeApp(firebaseConfig);
             const db = getFirestore(app);
-            console.log("Firebase Connected! User ID:", userData.id);
 
-            // ২. আজীবনের সেভ থাকা ডাটা লোড করার ফাংশন
+            // আজীবনের সেভ থাকা ডাটা ফায়ারবেস থেকে লোড করা
             async function loadLifetimeData() {
                 try {
                     const userRef = doc(db, "users", userData.id);
                     const userSnap = await getDoc(userRef);
 
                     if (userSnap.exists()) {
-                        // যদি ডাটাবেসে ইউজারের আগের রেকর্ড থাকে, তবে তা ফিরিয়ে আনা
                         const savedData = userSnap.data();
                         userData.coins = savedData.coins || 0;
                         userData.tk = savedData.tk || 0;
                         userData.referrals = savedData.referrals || 0;
                         userData.usedPromoCodes = savedData.usedPromoCodes || [];
-                        console.log("Old Lifetime Data Restored!");
                         userData.adCooldowns = savedData.adCooldowns || {};
                     } else {
-                        // নতুন ইউজার হলে ডাটাবেসে খাতা তৈরি করা
-                        console.log("New User Created!");
                         window.saveDataToFirebase();
                     }
                     
                     updateUI();
+                    renderAdBoxes();
                     loadGames();
                 } catch (e) {
                     console.error("Data Load Error:", e);
-                    updateUI(); // ডাটা না আসলেও অন্তত অ্যাপ চালু হবে
+                    updateUI();
+                    renderAdBoxes();
                     loadGames();
                 }
             }
 
-            // অ্যাপ চালুর সাথে সাথে ডাটা লোড শুরু
             loadLifetimeData();
 
-            // ৩. ব্যালেন্স পরিবর্তন হলে চিরতরে সেভ করার ফাংশন
+            // ফায়ারবেসে ডাটা সেভ রাখার ফাংশন
             window.saveDataToFirebase = async function() {
                 try {
                     await setDoc(doc(db, "users", userData.id), {
@@ -553,19 +518,19 @@ window.onload = () => { setTimeout(() => { renderAdBoxes(); }, 1500); };
                         referrals: userData.referrals,
                         usedPromoCodes: userData.usedPromoCodes,
                         adCooldowns: userData.adCooldowns,
-                        lastActive: new Date().toISOString() // শেষ কবে ঢুকেছে তার সময়
+                        lastActive: new Date().toISOString()
                     }, { merge: true });
-              
                 } catch (e) { 
                     console.log("Firebase Save Error:", e); 
                 }
             };
 
         } catch (err) {
-            console.log("Firebase Load Failed, continuing offline.", err);
+            console.log("Firebase Load Failed.", err);
             updateUI();
+            renderAdBoxes();
             loadGames();
         }
     </script>
 </body>
-</html>
+                                                                                                        </html>
