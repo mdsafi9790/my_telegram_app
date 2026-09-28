@@ -8,8 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
+    <!-- ================= AD NETWORKS SDK ================= -->
     <!-- Monetag SDK -->
     <script src='//libtl.com/sdk.js' data-zone='11884671' data-sdk='show_11884671'></script>
+    
+    <!-- Adsgram SDK (Telegram Mini App) -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
     <style>
         :root {
@@ -54,6 +58,38 @@
         .game-box img { width: 100%; height: 100px; object-fit: cover; }
         .game-box h4 { margin: 5px 0; font-size: 12px; }
         .game-box button { width: 100%; border-radius: 0 0 10px 10px; }
+        /* ============ Ads Page Styling (হুবহু ছবির মতো) ============ */
+.ads-header {
+    background: #0f172a; padding: 15px; text-align: center; color: white;
+}
+.search-bar {
+    width: 90%; padding: 10px; border-radius: 20px; border: none; outline: none; text-align: center; margin-top: 10px; font-size: 14px;
+}
+.categories-hub {
+    background: #dcfce7; padding: 15px; border-radius: 15px; margin: 10px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px;
+}
+.cat-btn {
+    background: white; border: 1px solid #cbd5e1; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; color: #1e293b;
+}
+.cat-btn.active { background: #3b82f6; color: white; border: none; }
+
+/* Ad Gallery Grids */
+.gallery-section { margin: 10px; background: #1e293b; border-radius: 10px; overflow: hidden; border: 1px solid #334155; }
+.gallery-title { background: #334155; padding: 10px; color: white; font-weight: bold; display: flex; justify-content: space-between; font-size: 14px; }
+.ad-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; padding: 10px; }
+
+/* Ad Box Item */
+.ad-box { background: white; border-radius: 8px; overflow: hidden; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+.ad-box-header { background: #1e3a8a; color: white; font-size: 10px; padding: 3px 0; font-weight: bold; }
+.ad-box-img { background: #334155; height: 50px; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+.ad-box-img i { font-size: 24px; color: rgba(255,255,255,0.7); }
+.ad-box-footer { font-size: 9px; padding: 5px; color: #1e293b; font-weight: bold; line-height: 1.2; }
+.ad-box.claimed .ad-box-img { background: #10b981; }
+.ad-box.claimed .ad-box-header { background: #059669; }
+
+@media (max-width: 400px) {
+    .ad-grid { grid-template-columns: repeat(3, 1fr); }
+}
     </style>
 </head>
 <body>
@@ -68,41 +104,62 @@
     </div>
 
     <!-- ================= 1. ADS PAGE ================= -->
-    <div id="ads-page" class="page container">
-        <h2>Ads Hub</h2>
-        
-        <div class="card">
-            <h3 style="margin-top:0;">WATCH & EARN (Premium)</h3>
-            <p style="color: var(--text-muted); font-size: 13px;">উচ্চ মূল্যের বিজ্ঞাপন দেখুন</p>
-            <button class="btn btn-blue" style="width: 100%; margin-bottom: 10px;" onclick="showMonetagAd()">Watch Monetag Ad</button>
-            <div class="flex-between" style="gap: 10px;">
-                <button class="btn btn-green" style="width: 50%;" onclick="openAdsterra()">Adsterra Ad</button>
-                <button class="btn btn-dark" style="width: 50%;" onclick="showAdsgram()">Adsgram Task</button>
-            </div>
-        </div>
+<!-- Ads & Categories Hub Page -->
+<div id="ads-page" class="page">
+    <div class="ads-header">
+        <h2>Ads & Categories Hub</h2>
+        <input type="text" class="search-bar" placeholder="Search...">
+    </div>
 
-        <h3>Daily Micro-Tasks</h3>
-        <div class="card flex-between">
-            <div><h4 style="margin: 0;">Task 1: Web Visit</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
-            <button class="btn btn-blue" onclick="completeLinkTask('https://omg10.com/4/11884648', 5)">Go</button>
+    <!-- Top Categories -->
+    <div class="categories-hub">
+        <button class="cat-btn active" onclick="switchAdTab('main-ads-content', this)"><i class="fas fa-th"></i> Daily Ads</button>
+        <button class="cat-btn" onclick="switchAdTab('entertainment-content', this)"><i class="fas fa-video"></i> Entertainment</button>
+        <button class="cat-btn" onclick="switchAdTab('microtask-content', this)"><i class="fas fa-tasks"></i> Micro-Tasks</button>
+    </div>
+
+    <!-- 1. Main Ads Content (30 Boxes) -->
+    <div id="main-ads-content" class="ad-tab-content">
+        <!-- Monetag Gallery -->
+        <div class="gallery-section">
+            <div class="gallery-title"><span><i class="fas fa-list"></i> Daily Ad Gallery (Monetag)</span> <i class="fas fa-chart-bar"></i></div>
+            <div class="ad-grid" id="monetag-grid"></div>
         </div>
-        <div class="card flex-between">
-            <div><h4 style="margin: 0;">Task 2: Quick Read</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
-            <button class="btn btn-blue" onclick="completeLinkTask('https://omg10.com/4/11884653', 5)">Go</button>
+        <!-- Adsterra Gallery -->
+        <div class="gallery-section">
+            <div class="gallery-title"><span><i class="fas fa-list"></i> Daily Ad Gallery 2 (Adsterra)</span> <i class="fas fa-chart-bar"></i></div>
+            <div class="ad-grid" id="adsterra-grid"></div>
         </div>
-        <div class="card flex-between">
-            <div><h4 style="margin: 0;">Task 3: Explore Offer</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
-            <button class="btn btn-blue" onclick="completeLinkTask('https://omg10.com/4/11884654', 5)">Go</button>
-        </div>
-        <div class="card flex-between">
-            <div><h4 style="margin: 0;">Task 4: Sponsor Site</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 5 TK Coin</p></div>
-            <button class="btn btn-blue" onclick="completeLinkTask('https://omg10.com/4/11884655', 5)">Go</button>
-        </div>
-        <div class="card flex-between">
-            <div><h4 style="margin: 0;">Task 5: Extra Bonus</h4><p style="margin:0; font-size: 12px; color: var(--gold);">Reward: 10 TK Coin</p></div>
-            <button class="btn btn-blue" onclick="completeLinkTask('https://omg10.com/4/11884657', 10)">Go</button>
+        <!-- Adsgram Gallery -->
+        <div class="gallery-section">
+            <div class="gallery-title"><span><i class="fas fa-list"></i> Daily Ad Gallery 3 (Adsgram)</span> <i class="fas fa-chart-bar"></i></div>
+            <div class="ad-grid" id="adsgram-grid"></div>
         </div>
     </div>
+
+    <!-- 2. Entertainment Content (Reels) -->
+    <div id="entertainment-content" class="ad-tab-content" style="display: none; padding: 15px;">
+        <h3 style="color: white;">Watch Reels & Earn</h3>
+        <div class="gallery-section" style="padding: 15px; text-align: center;">
+            <i class="fas fa-play-circle" style="font-size: 50px; color: #ef4444; margin-bottom: 10px;"></i>
+            <p style="color: white; margin-bottom: 15px;">প্রতিটি রিলস দেখলে পাবেন ১০০ কয়েন!</p>
+            <button class="btn btn-green" onclick="watchReelsTask()">Watch Reel (+100 Coins)</button>
+        </div>
+    </div>
+
+    <!-- 3. Micro-Tasks Content -->
+        <div id="microtask-content" class="ad-tab-content" style="display: none; padding: 15px;">
+            <h3 style="color: white; text-align: center;">Micro Tasks (Monetag)</h3>
+            <p style="color: #94a3b8; font-size: 13px; text-align: center; margin-bottom: 15px;">নিচের লিংকগুলোতে ক্লিক করে ১৫ সেকেন্ড অপেক্ষা করুন এবং টাস্ক কমপ্লিট করুন।</p>
+            
+            <div class="gallery-section" style="padding: 15px; display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884648', 1)"><i class="fas fa-link"></i> Task 1 (Click Here)</button>
+                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884653', 2)"><i class="fas fa-link"></i> Task 2 (Click Here)</button>
+                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884654', 3)"><i class="fas fa-link"></i> Task 3 (Click Here)</button>
+                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884655', 4)"><i class="fas fa-link"></i> Task 4 (Click Here)</button>
+                <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884657', 5)"><i class="fas fa-link"></i> Task 5 (Click Here)</button>
+            </div>
+        </div>
 
     <!-- ================= 2. GAME PAGE ================= -->
     <div id="game-page" class="page container">
@@ -239,13 +296,14 @@
 
         // ইউজারের ডিফল্ট ডাটা স্ট্রাকচার
         let userData = { 
-            id: currentUserId, 
-            username: "Player", 
-            coins: 0, 
-            tk: 0, 
-            referrals: 0, 
-            usedPromoCodes: [] 
-        };
+    id: currentUserId, 
+    username: "Player", 
+    coins: 0, 
+    tk: 0, 
+    referrals: 0, 
+    usedPromoCodes: [],
+    adCooldowns: {} // এটি নতুন যুক্ত হলো ২৪ ঘণ্টার হিসাব রাখার জন্য
+};
 
         function switchMainPage(pageId, element) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -328,6 +386,110 @@
                     </div>`;
             });
         }
+        // ================= ADS LOGIC (WITH REAL IDs) =================
+
+function switchAdTab(targetId, btn) {
+    document.querySelectorAll('.ad-tab-content').forEach(tab => tab.style.display = 'none');
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(targetId).style.display = 'block';
+    btn.classList.add('active');
+}
+
+function renderAdBoxes() {
+    const monetagGrid = document.getElementById('monetag-grid');
+    const adsterraGrid = document.getElementById('adsterra-grid');
+    const adsgramGrid = document.getElementById('adsgram-grid');
+    
+    if(!monetagGrid) return;
+    monetagGrid.innerHTML = ''; adsterraGrid.innerHTML = ''; adsgramGrid.innerHTML = '';
+
+    for (let i = 1; i <= 30; i++) {
+        // প্রথম ১০টি Monetag, পরের ১০টি Adsterra, শেষের ১০টি Adsgram
+        let network = i <= 10 ? 'Monetag' : (i <= 20 ? 'Adsterra' : 'Adsgram');
+
+        let lastWatched = userData.adCooldowns['box_' + i] || 0;
+        let isClaimed = (Date.now() - lastWatched) < (24 * 60 * 60 * 1000); // ২৪ ঘণ্টার লক
+
+        let boxHTML = `
+            <div class="ad-box ${isClaimed ? 'claimed' : ''}" id="box-ui-${i}">
+                <div class="ad-box-header">Box ${i}</div>
+                <div class="ad-box-img" onclick="${isClaimed ? 'showCooldownAlert()' : `startAdWatch(${i}, '${network}')`}">
+                    <i class="fas ${isClaimed ? 'fa-check-circle' : 'fa-play-circle'}"></i>
+                </div>
+                <div class="ad-box-footer" id="box-txt-${i}">${isClaimed ? 'Claimed<br>(Wait 24h)' : 'Watch Ads<br>+0.50 TK'}</div>
+            </div>
+        `;
+
+        if (i <= 10) monetagGrid.innerHTML += boxHTML;
+        else if (i <= 20) adsterraGrid.innerHTML += boxHTML;
+        else adsgramGrid.innerHTML += boxHTML;
+    }
+}
+
+// অ্যাড দেখা ও ১৫ সেকেন্ডের টাইমার
+function startAdWatch(boxNum, network) {
+    document.getElementById(`box-txt-${boxNum}`).innerHTML = "Watching...<br>15s";
+
+    // আপনার আসল অ্যাড ট্রিগার করা
+    if (network === 'Monetag') {
+        if (typeof show_11884671 === 'function') {
+            show_11884671(); // Monetag SDK Trigger
+        } else {
+            alert("অ্যাড লোড হচ্ছে না। একটু পর আবার চেষ্টা করুন।");
+            return;
+        }
+    } 
+    else if (network === 'Adsterra') {
+        window.open("https://www.highcpmgate.com/31397356", "_blank"); // Adsterra Smart Link
+    } 
+    else if (network === 'Adsgram') {
+        if (window.Adsgram) {
+            const AdController = window.Adsgram.init({ blockId: "49711" }); // Adsgram Block ID
+            AdController.show().catch((err) => console.log("Adsgram Error: ", err));
+        } else {
+            alert("Adsgram লোড হতে সমস্যা হচ্ছে।");
+            return;
+        }
+    }
+
+    // ১৫ সেকেন্ডের টাইমার ও টাকা যুক্ত করা
+    setTimeout(() => {
+        userData.tk += 0.50; // ০.৫০ টাকা যুক্ত হলো
+        userData.adCooldowns['box_' + boxNum] = Date.now(); // দেখার সময় সেভ হলো
+        
+        updateUI(); 
+        if(window.saveDataToFirebase) window.saveDataToFirebase();
+        
+        alert(`Box ${boxNum} দেখা সম্পন্ন! ০.৫০ টাকা যোগ হয়েছে।`);
+        renderAdBoxes(); // বক্সটি সবুজ করার জন্য রিফ্রেশ
+    }, 15000); 
+}
+
+function showCooldownAlert() { alert("আপনি এটি ইতিমধ্যে দেখেছেন। ২৪ ঘণ্টা পর আবার দেখতে পারবেন।"); }
+
+function watchReelsTask() {
+    // এখানে আপনার রিলসের লিংক বসাবেন
+    window.open('https://youtube.com/shorts/', '_blank'); 
+    setTimeout(() => {
+        userData.coins += 100; updateUI(); 
+        if(window.saveDataToFirebase) window.saveDataToFirebase();
+        alert("Reel দেখা সম্পন্ন! ১০০ কয়েন যোগ হয়েছে।");
+    }, 15000);
+}
+
+// Micro Task কমপ্লিট করার ফাংশন
+function completeMicroTask(url, taskNum) {
+    window.open(url, '_blank');
+    setTimeout(() => {
+        userData.coins += 50; // টাস্কের জন্য ৫০ কয়েন 
+        updateUI(); 
+        if(window.saveDataToFirebase) window.saveDataToFirebase();
+        alert(`Task ${taskNum} কমপ্লিট! 50 Coins যোগ হয়েছে।`);
+    }, 15000);
+}
+
+// অ্যাপ চালু হলে বক্সগুলো লোড করার জন্য
+window.onload = () => { setTimeout(() => { renderAdBoxes(); }, 1500); };
     </script>
 
     <!-- ================= SCRIPT 2: FIREBASE (LIFETIME DATA LOAD & SAVE) ================= -->
@@ -363,6 +525,7 @@
                         userData.referrals = savedData.referrals || 0;
                         userData.usedPromoCodes = savedData.usedPromoCodes || [];
                         console.log("Old Lifetime Data Restored!");
+                        userData.adCooldowns = savedData.adCooldowns || {};
                     } else {
                         // নতুন ইউজার হলে ডাটাবেসে খাতা তৈরি করা
                         console.log("New User Created!");
@@ -389,8 +552,10 @@
                         tk: userData.tk, 
                         referrals: userData.referrals,
                         usedPromoCodes: userData.usedPromoCodes,
+                        adCooldowns: userData.adCooldowns,
                         lastActive: new Date().toISOString() // শেষ কবে ঢুকেছে তার সময়
                     }, { merge: true });
+              
                 } catch (e) { 
                     console.log("Firebase Save Error:", e); 
                 }
