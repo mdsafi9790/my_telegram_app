@@ -4,29 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EarnVerse - Play to Earn</title>
+    
     <!-- FontAwesome & Telegram SDK -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <!-- ================= AD NETWORKS SDK ================= -->
-    <!-- Monetag SDK -->
-    <script src='//libtl.com/sdk.js' data-zone='11884671' data-sdk='show_11884671'></script>
+    <script>
+        // Right Click Disable & DevTools Block for Basic Security
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.keyCode === 123) return false; // Block F12
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 'I'.charCodeAt(0)) return false; // Block Ctrl+Shift+I
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 'J'.charCodeAt(0)) return false; // Block Ctrl+Shift+J
+            if (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0)) return false; // Block Ctrl+U
+        };
+
+        // Detect if Telegram Web App is running (Block external browser access)
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!window.Telegram || !window.Telegram.WebApp || !window.Telegram.WebApp.initData) {
+                document.body.innerHTML = "<h2 style='color:red; text-align:center; margin-top: 50px;'>! Please open this app inside Telegram!</h2>";
+            } else {
+                window.Telegram.WebApp.expand(); // অ্যাপ ফুলস্ক্রিন করা
+            }
+        });
+    </script>
     
+    <!-- Monetag SDK -->
+    <script src="//libtl.com/sdk.js" data-zone="11884671" data-sdk="show_11884671"></script>
     <!-- Adsgram SDK (Telegram Mini App) -->
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
     <style>
         :root {
-            --bg-dark: #0f172a; --card-bg: #1e293b; --primary: #3b82f6;
-            --success: #10b981; --text-light: #f8fafc; --text-muted: #94a3b8; --gold: #fbbf24;
+            --bg-dark: #0f172a; 
+            --card-bg: #1e293b; 
+            --primary: #3b82f6;
+            --success: #10b981; 
+            --text-light: #f8fafc; 
+            --text-muted: #94a3b8; 
+            --gold: #fbbf24;
+            --bg-main: #f8f9fb;
         }
+
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: var(--text-light); padding-bottom: 80px; user-select: none; }
-        .container { padding: 15px; }
         
+        body { 
+            margin: 0; 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: var(--text-light); 
+            padding-bottom: 80px; 
+            user-select: none; 
+        }
+        
+        .container { padding: 15px; }
+
         /* Bottom Navigation */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #0b1120; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #1e293b; z-index: 1000; }
-        .nav-item { text-align: center; color: var(--text-muted); cursor: pointer; font-size: 12px; font-weight: bold; width: 20%; }
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: #0b1120; display: flex; justify-content: space-around; 
+            padding: 10px 0; border-top: 1px solid #1e293b; z-index: 1000; 
+        }
+        .nav-item { 
+            text-align: center; color: var(--text-muted); cursor: pointer; 
+            font-size: 12px; font-weight: bold; width: 20%; 
+        }
         .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
         .nav-item.active { color: var(--success); }
 
@@ -38,7 +80,7 @@
         /* Cards & Buttons */
         .card { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .btn { border: none; padding: 10px 15px; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; text-align: center;}
+        .btn { border: none; padding: 10px 15px; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; }
         .btn-green { background: var(--success); }
         .btn-blue { background: var(--primary); }
         .btn-dark { background: #334155; }
@@ -47,20 +89,20 @@
         /* Header */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0b1120; position: sticky; top: 0; z-index: 100; }
         .header-balance { background: #334155; padding: 5px 12px; border-radius: 20px; font-weight: bold; color: var(--gold); }
-        
+
         /* Game Sub-Menu */
         .game-nav { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; border-bottom: 1px solid #334155; margin-bottom: 15px; }
         .game-nav span { white-space: nowrap; font-size: 14px; font-weight: bold; color: var(--text-muted); cursor: pointer; }
-        .game-nav span.active { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px;}
-        
+        .game-nav span.active { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
+
         /* Game Grid */
         .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .game-box { background: #0b1120; border-radius: 10px; overflow: hidden; text-align: center; border: 1px solid #334155;}
+        .game-box { background: #0b1120; border-radius: 10px; overflow: hidden; text-align: center; border: 1px solid #334155; }
         .game-box img { width: 100%; height: 100px; object-fit: cover; }
         .game-box h4 { margin: 5px 0; font-size: 12px; }
         .game-box button { width: 100%; border-radius: 0 0 10px 10px; }
 
-        /* ============ Ads Page Styling ============ */
+        /* Ads Page Styling */
         .ads-header { background: #0f172a; padding: 15px; text-align: center; color: white; }
         .search-bar { width: 90%; padding: 10px; border-radius: 20px; border: none; outline: none; text-align: center; margin-top: 10px; font-size: 14px; background: #1e293b; color: white; }
         .categories-hub { background: #dcfce7; padding: 15px; border-radius: 15px; margin: 10px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px; }
@@ -71,29 +113,222 @@
         .gallery-section { margin: 10px; background: #1e293b; border-radius: 10px; overflow: hidden; border: 1px solid #334155; }
         .gallery-title { background: #334155; padding: 10px; color: white; font-weight: bold; display: flex; justify-content: space-between; font-size: 14px; }
         .ad-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; padding: 10px; }
-
-        /* Ad Box Item */
+        
         .ad-box { background: white; border-radius: 8px; overflow: hidden; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .ad-box-header { background: #1e3a8a; color: white; font-size: 10px; padding: 3px 0; font-weight: bold; }
         .ad-box-img { background: #334155; height: 50px; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
         .ad-box-img i { font-size: 24px; color: rgba(255,255,255,0.7); }
         .ad-box-footer { font-size: 9px; padding: 5px; color: #1e293b; font-weight: bold; line-height: 1.2; }
+        
         .ad-box.claimed .ad-box-img { background: #10b981; }
         .ad-box.claimed .ad-box-header { background: #059669; }
 
         @media (max-width: 400px) {
             .ad-grid { grid-template-columns: repeat(3, 1fr); }
         }
+
+        .home-container {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: #1e293b;
+            padding-bottom: 20px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .home-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 15px 10px; background: #ffffff; }
+        .home-header h2 { margin: 0; font-size: 22px; color: #1e293b; }
+        .home-header h2 span { color: #0f766e; }
+        .home-header p { margin: 4px 0 0; font-size: 12px; color: #64748b; }
+        .header-icons { display: flex; gap: 12px; align-items: center; }
+        .icon-btn { position: relative; width: 36px; height: 36px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #1e293b; font-size: 16px; }
+        .notification-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; border: 2px solid #fff; }
+        .profile-pic { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .online-dot { position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; background: #10b981; border-radius: 50%; border: 2px solid #fff; }
+        
+        .search-container { padding: 0 15px 15px; background: #ffffff; border-radius: 0 0 20px 20px; }
+        .main-body { padding: 15px; }
+        .section-title { font-size: 16px; font-weight: bold; margin: 15px 0 10px; color: #1e293b; }
+        
+        .balance-cards { display: flex; gap: 10px; }
+        .b-card { flex: 1; padding: 15px; border-radius: 16px; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .b-card.blue { background: linear-gradient(135deg, #1e3a8a, #2563eb); }
+        .b-card.green { background: linear-gradient(135deg, #065f46, #059669); }
+        .b-card h4 { margin: 0; font-size: 12px; font-weight: 500; opacity: 0.9; }
+        .b-card h2 { margin: 8px 0; font-size: 20px; font-weight: bold; }
+        .b-card p { margin: 0; font-size: 10px; opacity: 0.75; }
+
+        .promo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .promo-card { padding: 15px; border-radius: 16px; color: white; position: relative; min-height: 80px; display: flex; flex-direction: column; justify-content: space-between; }
+        .promo-card.teal { background: linear-gradient(135deg, #0f766e, #14b8a6); }
+        .promo-card.blue-light { background: linear-gradient(135deg, #0ea5e9, #38bdf8); }
+        .promo-card h4 { margin: 0; font-size: 13px; line-height: 1.3; }
+        .promo-btn { background: #fbbf24; color: #78350f; font-size: 10px; padding: 5px 10px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; width: fit-content; margin-top: 8px; }
+
+        .rewards-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .reward-item { background: #1e293b; color: white; border-radius: 12px; padding: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .reward-item span { font-size: 10px; font-weight: bold; line-height: 1.2; }
+        .reward-item small { color: #94a3b8; font-weight: normal; display: block; font-size: 8px; }
+
+        .tasks-layout { display: flex; gap: 10px; }
+        .task-list-box { flex: 2; background: white; border-radius: 15px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .task-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .task-item p { margin: 0; font-size: 11px; font-weight: bold; color: #1e293b; }
+        .task-coin { background: #fef3c7; color: #d97706; padding: 2px 6px; border-radius: 10px; font-size: 9px; font-weight: bold; }
+        .progress-bar { height: 4px; background: #e2e8f0; border-radius: 2px; margin-bottom: 10px; }
+        .progress-fill { height: 100%; background: #0f766e; border-radius: 2px; }
+        
+        .invest-box { flex: 1; background: #e0f2fe; border-radius: 15px; padding: 12px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .invest-box p { margin: 5px 0 8px; font-size: 11px; font-weight: bold; color: #0369a1; }
+        .invest-btn { background: #0284c7; color: white; border: none; padding: 4px 12px; border-radius: 12px; font-size: 10px; cursor: pointer; }
+
+        .quick-pills { display: flex; gap: 8px; margin-top: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .pill { background: white; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; color: #1e293b; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.04); cursor: pointer; white-space: nowrap; }
+
+        .recent-activity { background: white; border-radius: 15px; padding: 15px; margin-top: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); color: #1e293b; }
+        .activity-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .activity-header h3 { margin: 0; font-size: 14px; }
+        .see-all { background: #0f766e; color: white; font-size: 10px; padding: 4px 10px; border-radius: 12px; text-decoration: none; }
+        .activity-item { display: flex; align-items: center; gap: 12px; }
+        .activity-details p { margin: 0; font-size: 12px; font-weight: bold; }
+
+        /* Modals & Wheel */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; box-sizing: border-box; }
+        .modal-box { background: white; color:#1e293b; width: 100%; max-width: 340px; border-radius: 20px; padding: 20px; position: relative; text-align: center; box-sizing: border-box; }
+        .close-modal { position: absolute; top: 12px; right: 15px; font-size: 22px; cursor: pointer; color: var(--text-muted); }
+        .modal-input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; margin: 15px 0; outline: none; text-align: center; font-size: 16px; font-weight: bold; box-sizing: border-box; }
+        .modal-btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 14px; cursor: pointer; }
+
+        .wheel-container { position: relative; width: 250px; height: 250px; margin: 20px auto; }
+        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #334155; position: relative; overflow: hidden; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
+        .wheel-pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 22px solid #ef4444; z-index: 10; }
+        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 36px; height: 36px; background: white; border-radius: 50%; z-index: 5; border: 3px solid #334155; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+
+        .task-container { padding: 15px; font-family: 'Segoe UI', sans-serif; color: #333; }
+        .draw-card { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 18px; border-radius: 16px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25); cursor: pointer; position: relative; }
+        .draw-header { display: flex; justify-content: space-between; font-size: 12px; opacity: 0.9; }
+        .draw-badge { background: rgba(255, 255, 255, 0.2); padding: 3px 8px; border-radius: 12px; }
+        .draw-title { margin: 12px 0 4px 0; font-size: 22px; font-weight: 700; }
+        .draw-subtitle { font-size: 12px; margin: 0 0 12px 0; opacity: 0.9; }
+        .draw-status { font-size: 13px; margin-bottom: 12px; background: rgba(0, 0, 0, 0.15); padding: 6px 12px; border-radius: 8px; display: inline-block; }
+        .draw-btn { width: 100%; padding: 12px; background: #ffffff; color: #047857; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; }
+
+        .task-list { display: flex; flex-direction: column; gap: 12px; }
+        .task-card { background: #ffffff; padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #f1f5f9; }
+        .task-info { display: flex; align-items: center; gap: 12px; }
+        .task-icon { width: 36px; height: 36px; }
+        .task-info h4 { margin: 0; font-size: 14px; color: #0f172a; }
+        .reward-text { font-size: 12px; color: #10b981; font-weight: 600; }
+        .task-btn { padding: 8px 16px; border-radius: 8px; border: none; background: #2563eb; color: white; font-weight: 600; font-size: 13px; cursor: pointer; }
+        .task-btn:disabled { background: #94a3b8 !important; cursor: not-allowed; }
+        .task-btn.claimed { background: #64748b; }
+
+        .prize-list { margin: 15px 0; display: flex; flex-direction: column; gap: 8px; }
+        .prize-item { display: flex; justify-content: space-between; padding: 10px; border-radius: 8px; font-size: 13px; }
+        .rank-1 { background: #fef3c7; color: #b45309; }
+        .rank-2 { background: #e0e7ff; color: #4338ca; }
+        .rank-3 { background: #f1f5f9; color: #475569; }
+
+        .timer-circle { font-size: 32px; font-weight: bold; color: #2563eb; margin: 15px 0; }
+
+        /* Game Section Base Styles */
+        .game-container { background: #0f0f1a; color: white; padding: 15px; font-family: 'Segoe UI', Tahoma, sans-serif; min-height: 100vh; }
+        .game-header { display: flex; gap: 10px; margin-bottom: 20px; }
+        .search-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 40px; height: 40px; color: white; cursor: pointer; }
+        .categories { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn { background: rgba(255,255,255,0.1); border: none; border-radius: 20px; padding: 8px 16px; color: white; white-space: nowrap; font-weight: bold; cursor: pointer; }
+        .cat-btn.active { background: rgba(255,255,255,0.2); border: 1px solid white; }
+
+        .featured-game { background: linear-gradient(180deg, #1e1e38 0%, #15152a 100%); border-radius: 16px; padding: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; }
+        .featured-info { display: flex; align-items: center; gap: 15px; }
+        .featured-info img { width: 50px; height: 50px; border-radius: 10px; }
+        .play-btn { background: #3b82f6; color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+        .game-actions { display: flex; gap: 10px; margin-bottom: 25px; }
+        .action-btn { flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; font-weight: bold; display: flex; justify-content: center; align-items: center; gap: 8px; cursor: pointer; }
+
+        .trending-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .trending-header h3 { margin: 0; font-size: 16px; font-weight: 800; letter-spacing: 1px; }
+        .view-all { font-size: 12px; color: #94a3b8; cursor: pointer; }
+        .trending-list { display: flex; flex-direction: column; gap: 12px; }
+        .t-game-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; }
+        .t-game-info { display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden; }
+        .t-game-info img { width: 45px; height: 45px; border-radius: 10px; } 
+        .t-game-text h4 { margin: 0 0 4px 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .t-game-text p { margin: 0; font-size: 11px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .mining-box { background: linear-gradient(180deg, #1e3a8a 0%, #1e1b4b 100%); width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
+        .mining-header { text-align: right; margin-bottom: 40px; margin-top: 20px; }
+        .mining-balance { background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px; color: #fbbf24; font-weight: bold; }
+        .mining-display { background: rgba(0,0,0,0.4); border-radius: 24px; padding: 30px 20px; text-align: center; border: 1px solid rgba(255,255,255,0.1); margin-bottom: auto; }
+        .timer { font-size: 14px; color: #cbd5e1; margin-bottom: 10px; }
+        .mined-amount { font-size: 40px; font-weight: bold; color: white; margin-bottom: 15px; }
+        .mining-rate-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .rate { font-size: 16px; color: #fbbf24; }
+        .boost-btn { background: #a855f7; color: white; border: none; padding: 5px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .progress-container { background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { background: #fbbf24; width: 0%; height: 100%; transition: width 1s linear; }
+        .claim-mine-btn { background: #10b981; color: white; border: none; padding: 12px 30px; border-radius: 20px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; }
+        .mining-upgrades { display: flex; gap: 10px; margin-bottom: 20px; }
+        .upgrade-btn { flex: 1; padding: 15px 10px; border-radius: 16px; border: none; font-weight: bold; color: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .speed-btn { background: #eab308; color: #451a03; }
+        .storage-btn { background: #3b82f6; }
+        .upgrade-btn small { font-weight: normal; opacity: 0.9; }
+
+        .leaderboard-list { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
+        .lb-item { display: flex; justify-content: space-between; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; }
+        .lb-rank { font-weight: bold; color: #fbbf24; width: 30px; }
+        .lb-name { flex: 1; color: white; }
+        .lb-score { color: #10b981; font-weight: bold; }
+
+        .wallet-container { background: #0f172a; color: white; padding: 15px; font-family: 'Segoe UI', Tahoma, sans-serif; min-height: 100vh; }
+        .withdrawal-section { display: flex; gap: 15px; }
+        .methods-list { flex: 1.5; display: flex; flex-direction: column; gap: 10px; }
+        .method-card { background: #1e293b; padding: 10px; border-radius: 12px; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .method-icon { width: 30px; height: 30px; border-radius: 6px; }
+        .method-name { flex: 1; font-weight: 600; font-size: 15px; }
+        .select-btn { background: rgba(255,255,255,0.1); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+        .condition-box { flex: 1; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 12px; font-size: 12px; color: #cbd5e1; display: flex; flex-direction: column; gap: 5px; text-align: left; }
+        .info-icon { font-size: 18px; margin-bottom: 5px; }
+
+        .referral-card { background: #1e293b; border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .ref-desc { font-size: 13px; color: #10b981; margin: 0 0 10px 0; }
+        .ref-link-box { display: flex; flex-direction: column; gap: 10px; }
+        .ref-link-box input { background: #0f172a; color: #94a3b8; border: 1px solid #334155; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; outline: none; }
+        .ref-actions { display: flex; gap: 10px; }
+        .copy-btn, .share-btn { flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: white; }
+        .copy-btn { background: #3b82f6; }
+        .share-btn { background: #10b981; }
+
+        .team-card { background: #1e293b; border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .team-stats { display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
+        .view-details-btn { background: rgba(255,255,255,0.1); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+
+        .salary-notice { margin-top: 25px; border: 1px solid #fbbf24; background: rgba(251, 191, 36, 0.1); border-radius: 12px; padding: 15px; display: flex; gap: 15px; align-items: center; color: #fef3c7; }
+        .salary-icon { font-size: 24px; }
+        .salary-notice h4 { margin: 0 0 5px 0; font-size: 13px; color: #fbbf24; }
+        .salary-notice p { margin: 0; font-size: 12px; line-height: 1.4; opacity: 0.9; }
+
+        .wallet-modal { background: #1e293b; color: white; }
+        .wallet-modal .modal-input { background: #0f172a; color: white; border: 1px solid #334155; }
+        .team-modal-box { background: #0f172a; width: 90%; max-width: 400px; max-height: 80vh; padding: 20px; border-radius: 16px; position: relative; display: flex; flex-direction: column; border: 1px solid #334155; color: white; }
+        .salary-progress-box { background: #1e293b; padding: 12px; border-radius: 10px; margin: 15px 0; font-size: 13px; color: white; }
+        .progress-bar-bg { background: #334155; height: 8px; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+        .progress-bar-fill { background: #fbbf24; height: 100%; transition: width 0.5s; }
+        .team-list-header { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; padding: 0 10px 10px 10px; border-bottom: 1px solid #334155; }
+        .team-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .team-member { display: flex; justify-content: space-between; font-size: 14px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; color: white; }
     </style>
 </head>
 <body>
-
     <!-- Header -->
     <div class="header">
         <div class="header-balance"><i class="fas fa-coins"></i> <span id="ui-coin-balance">0</span> Coins</div>
-        <div>
+        <div class="header-icons">
             <i class="fas fa-bell" style="font-size: 20px; margin-right: 15px;"></i>
-            <i class="fas fa-user-circle" style="font-size: 24px; color: var(--primary);" onclick="alert('Profile Settings Coming Soon!')"></i>
+            <i class="fas fa-user-circle" style="font-size: 24px; color: var(--primary); cursor: pointer;" onclick="alert('Profile Settings Coming Soon!')"></i>
         </div>
     </div>
 
@@ -103,7 +338,7 @@
             <h2>Ads & Categories Hub</h2>
             <input type="text" class="search-bar" placeholder="Search...">
         </div>
-
+        
         <!-- Top Categories -->
         <div class="categories-hub">
             <button class="cat-btn active" onclick="switchAdTab('main-ads-content', this)"><i class="fas fa-th"></i> Daily Ads</button>
@@ -111,7 +346,7 @@
             <button class="cat-btn" onclick="switchAdTab('microtask-content', this)"><i class="fas fa-tasks"></i> Micro-Tasks</button>
         </div>
 
-        <!-- 1. Main Ads Content (30 Boxes) -->
+        <!-- Main Ads Content (30 Boxes) -->
         <div id="main-ads-content" class="ad-tab-content">
             <div class="gallery-section">
                 <div class="gallery-title"><span><i class="fas fa-list"></i> Daily Ad Gallery (Monetag)</span> <i class="fas fa-chart-bar"></i></div>
@@ -127,21 +362,20 @@
             </div>
         </div>
 
-        <!-- 2. Entertainment Content (Reels) -->
+        <!-- Entertainment Content (Reels) -->
         <div id="entertainment-content" class="ad-tab-content" style="display: none; padding: 15px;">
             <h3 style="color: white;">Watch Reels & Earn</h3>
             <div class="gallery-section" style="padding: 15px; text-align: center;">
                 <i class="fas fa-play-circle" style="font-size: 50px; color: #ef4444; margin-bottom: 10px;"></i>
-                <p style="color: white; margin-bottom: 15px;">প্রতিটি রিলস দেখলে পাবেন ১০০ কয়েন!</p>
+                <p style="color: white; margin-bottom: 15px;">প্রতিটি রিলস দেখলে পাবেন ১০০ কয়েন!</p>
                 <button class="btn btn-green" onclick="watchReelsTask()">Watch Reel (+100 Coins)</button>
             </div>
         </div>
 
-        <!-- 3. Micro-Tasks Content -->
+        <!-- Micro-Tasks Content -->
         <div id="microtask-content" class="ad-tab-content" style="display: none; padding: 15px;">
             <h3 style="color: white; text-align: center;">Micro Tasks (Monetag)</h3>
             <p style="color: #94a3b8; font-size: 13px; text-align: center; margin-bottom: 15px;">নিচের লিংকগুলোতে ক্লিক করে ১৫ সেকেন্ড অপেক্ষা করুন এবং টাস্ক কমপ্লিট করুন।</p>
-            
             <div class="gallery-section" style="padding: 15px; display: flex; flex-direction: column; gap: 10px;">
                 <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884648', 1)"><i class="fas fa-link"></i> Task 1 (+50 Coins)</button>
                 <button class="btn btn-blue" onclick="completeMicroTask('https://omg10.com/4/11884653', 2)"><i class="fas fa-link"></i> Task 2 (+50 Coins)</button>
@@ -153,107 +387,387 @@
     </div>
 
     <!-- ================= 2. GAME PAGE ================= -->
-    <div id="game-page" class="page container">
-        <h2 style="margin-top:0;">Game Center</h2>
-        
-        <div class="game-nav">
-            <span class="active" onclick="switchSubTab(this, 'game-games')">Games</span>
-            <span onclick="switchSubTab(this, 'game-mining')">Mining</span>
-            <span onclick="switchSubTab(this, 'game-lucky')">Lucky Draw</span>
-            <span onclick="switchSubTab(this, 'game-leaderboard')">Leaderboard</span>
-        </div>
+    <div class="game-container page" id="game-page">
+        <div class="game-header">
+            <button class="search-btn"><i class="fa fa-search"></i></button>
+            <div class="categories">
+    <button class="cat-btn active" onclick="filterCategory('ALL', this)">ALL</button>
+    <button class="cat-btn" onclick="filterCategory('Arcade', this)">ARCADE</button>
+    <button class="cat-btn" onclick="filterCategory('Puzzle', this)">PUZZLE</button>
+    <button class="cat-btn" onclick="filterCategory('Sports', this)">SPORT</button>
+</div>
+</div>
 
-        <div id="game-games" class="sub-page">
-            <div class="game-grid" id="game-monetize-container"></div>
-        </div>
-        
-        <div id="game-mining" class="sub-page" style="display:none; text-align:center;">
-            <div class="card" style="padding: 30px;">
-                <i class="fas fa-hammer" style="font-size: 40px; color: var(--gold); margin-bottom:15px;"></i>
-                <h3>Cloud Mining</h3>
-                <p style="font-size:12px; color:var(--text-muted);">Start mining session to earn passive TK Coins.</p>
-                <button class="btn btn-green" onclick="alert('Mining Started! Return after 4 hours.')">Start Mining Session</button>
+        <div class="featured-game">
+            <div class="featured-info">
+                <img src="https://img.gamedistribution.com/f9c8f07010f741369f4567222475968b-512x512.jpeg" alt="Block Buster">
+                <h3>Block Buster</h3>
             </div>
+            <button class="play-btn" onclick="playGame('https://html5.gamemonetize.co/f9c8f07010f741369f4567222475968b/')">PLAY</button>
         </div>
 
-        <div id="game-lucky" class="sub-page" style="display:none;">
-            <div class="card text-center" style="background: linear-gradient(135deg, #065f46, #047857);">
-                <h3 style="margin:0;">Weekly Lucky Draw</h3>
-                <p style="font-size: 13px;">Prize Pool: BDT 5,000</p>
-                <button class="btn btn-blue" style="background: rgba(255,255,255,0.2);">Buy Ticket (100 Coins)</button>
+        <div class="game-actions">
+            <button class="action-btn" onclick="openModal('leaderboardModal')"><span class="icon">🏆</span> Leaderboards</button>
+            <button class="action-btn" onclick="openModal('miningModal')"><span class="icon">⛏️</span> Mining</button>
+        </div>
+
+        <div class="trending-section">
+            <div class="trending-header">
+                <h3>TRENDING GAMES</h3>
+                <span class="view-all">View all</span>
             </div>
-        </div>
-
-        <div id="game-leaderboard" class="sub-page" style="display:none;">
-            <div class="card flex-between"><div><b>1.</b> Player_789</div> <div style="color:var(--gold);">15,000 <i class="fas fa-coins"></i></div></div>
-            <div class="card flex-between"><div><b>2.</b> EarnKing</div> <div style="color:var(--gold);">12,400 <i class="fas fa-coins"></i></div></div>
-            <div class="card flex-between"><div><b>3.</b> You</div> <div style="color:var(--gold);"><span id="lead-coin">0</span> <i class="fas fa-coins"></i></div></div>
+            <div class="trending-list" id="trendingGamesList">
+                <p style="text-align:center; color:#94a3b8;">Loading games...</p>
+                <div id="game-monetize-container"></div>
+            </div>
         </div>
     </div>
+<div class="game-actions">
+    <button class="action-btn" onclick="openModal('leaderboardModal')"><span class="icon">🏆</span> Leaderboards</button>
+    <button class="action-btn" onclick="openModal('miningModal')"><span class="icon">⚒</span> Mining</button>
+</div>
+
+<div class="trending-section">
+    <div class="trending-header">
+        <h3>TRENDING GAMES</h3>
+        <span class="view-all">View all</span>
+    </div>
+    <div class="trending-list" id="trendingGamesList">
+        <div id="game-monetize-container" class="game-grid">
+            <p style="grid-column: span 2; text-align: center; color: #94a3b8; padding: 20px;">গেমগুলো লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</p>
+        </div>
+    </div>
+</div>
 
     <!-- ================= 3. HOME PAGE (Default Active) ================= -->
-    <div id="home-page" class="page container active">
-        <h2 style="margin-top:0;">Welcome, Player!</h2>
-        
-        <div style="display: flex; gap: 10px; margin-bottom:15px;">
-            <div class="card" style="flex: 1; background: #1e3a8a;">
-                <p style="margin:0; font-size: 12px;">Coin Balance</p>
-                <h2 style="margin:5px 0;"><span id="home-coin">0</span></h2>
+    <div class="home-container page active" id="home-page">
+        <div class="home-header">
+            <div>
+                <h2>Welcome, <span id="display-name">User!</span></h2>
+                <p>Your personalized financial hub</p>
             </div>
-            <div class="card" style="flex: 1; background: #065f46;">
-                <p style="margin:0; font-size: 12px;">TK Balance</p>
-                <h2 style="margin:5px 0;">TK <span id="home-tk">0.00</span></h2>
+            <div class="header-icons">
+                <div class="icon-btn" onclick="openModal('notificationModal')">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-dot"></div>
+                </div>
+                <div style="position: relative; cursor:pointer;" onclick="openModal('profileModal')">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="profile-pic" alt="Profile">
+                    <div class="online-dot"></div>
+                </div>
             </div>
         </div>
 
-        <div class="card" style="text-align: center;">
-            <img src="https://cdn-icons-png.flaticon.com/512/3790/3790100.png" style="width: 80px; margin-bottom: 10px;" alt="Wheel">
-            <h3 style="margin:0;">Lucky Wheel</h3>
-            <p style="font-size: 12px; color: var(--text-muted);">আমাদের টেলিগ্রাম চ্যানেল থেকে কোড নিয়ে ফ্রি কয়েন নিন।</p>
-            <input type="text" id="promoCodeInput" class="input-box" placeholder="Enter Redeem Code (e.g. EV-001)">
-            <button class="btn btn-green" style="width: 100%;" onclick="claimPromo()">Claim Reward</button>
-            <a href="https://t.me/EarnVerse_RedeemCode" target="_blank" style="display:block; margin-top:10px; color:var(--primary); font-size:12px;">Get Codes Here</a>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search features, history, or services">
+        </div>
+
+        <div class="main-body">
+            <h3 class="section-title" style="margin-top:0;">Balance Overview</h3>
+            <div class="balance-cards">
+                <div class="b-card blue">
+                    <h4>Coin Balance</h4>
+                    <h2><span id="home-coin">0</span></h2>
+                    <p>Last updated: 1 min ago</p>
+                </div>
+                <div class="b-card green">
+                    <h4>TK (Money) Balance</h4>
+                    <h2>TK <span id="home-tk">0.00</span></h2>
+                    <p>Last updated: 1 min ago</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">Featured Promotions</h3>
+            <div class="promo-grid">
+                <div class="promo-card teal">
+                    <h4>Daily Cashback Deals</h4>
+                    <button class="promo-btn" onclick="openModal('redeemModal')">Shop Now</button>
+                </div>
+                <div class="promo-card blue-light">
+                    <h4>Partner Offers</h4>
+                    <span style="font-size: 10px; opacity: 0.9;">See as more ></span>
+                </div>
+            </div>
+
+            <h3 class="section-title">Rewards Center</h3>
+            <div class="rewards-row">
+                <div class="reward-item" style="border-left: 3px solid #3b82f6;">
+                    <span>Claim Freebies<small>E.g., streaming trial</small></span>
+                </div>
+                <div class="reward-item" style="border-left: 3px solid #f59e0b;">
+                    <span>Discount Coupons<small>E.g. straroon</small></span>
+                </div>
+                <div class="reward-item" style="border-left: 3px solid #10b981;">
+                    <span>Level Up Rewards<small>E.g. straaunt</small></span>
+                </div>
+            </div>
+
+            <h3 class="section-title">Daily Tasks & Missions</h3>
+            <div class="tasks-layout">
+                <div class="task-list-box">
+                    <div class="task-item">
+                        <div><p>Complete 3 daily actions</p></div>
+                        <div class="task-coin">+100</div>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 65%;"></div></div>
+                    <div class="task-item">
+                        <div><p>Complete 1 progress</p></div>
+                        <div class="task-coin">+100</div>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 35%;"></div></div>
+                </div>
+                <div class="invest-box">
+                    <p>Start small, invest in gold</p>
+                    <button class="invest-btn">Explore</button>
+                </div>
+            </div>
+
+            <div class="quick-pills">
+                <div class="pill" onclick="openModal('redeemModal')">Lucky Wheel</div>
+                <div class="pill">Gift Chest</div>
+                <div class="pill">Refer & Earn</div>
+            </div>
+
+            <div class="recent-activity">
+                <div class="activity-header">
+                    <h3>Recent Activity</h3>
+                    <a href="#" class="see-all">See All</a>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-details">
+                        <p>Welcome to EarnVerse!</p>
+                        <span style="font-size: 10px; color: #64748b;">Today</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- ================= 4. TASK PAGE ================= -->
-    <div id="task-page" class="page container">
-        <h3>Social Tasks</h3>
-        <div class="card flex-between">
-            <div><h4 style="margin: 0;"><i class="fab fa-telegram" style="color:#3b82f6;"></i> Join Community</h4><p style="margin: 5px 0 0 0; font-size: 12px; color: var(--gold);">Reward: 200 Coins</p></div>
-            <button class="btn btn-blue" onclick="completeLinkTask('https://t.me/EarnVerse_Community', 200)">Join</button>
+    <div class="task-container page" id="task-page">
+        <div class="draw-card" onclick="openModal('drawModal')">
+            <div class="draw-header">
+                <span class="draw-badge">Monthly Contest</span>
+                <span class="draw-date">Deadline: Month End</span>
+            </div>
+            <h2 class="draw-title">1st Prize: 10,000 BDT</h2>
+            <p class="draw-subtitle">More coins added = Higher chance to win!</p>
+            <div class="draw-status">
+                <span>Your Tickets/Coins: <b id="userDrawCoins">0</b></span>
+            </div>
+            <button class="draw-btn" id="drawActionBtn" onclick="event.stopPropagation(); openModal('addCoinsModal')">Join Draw (3,000 Coins)</button>
         </div>
-        <div class="card flex-between">
-            <div><h4 style="margin: 0;"><i class="fab fa-telegram" style="color:#10b981;"></i> Redeem Code Channel</h4><p style="margin: 5px 0 0 0; font-size: 12px; color: var(--gold);">Reward: 150 Coins</p></div>
-            <button class="btn btn-blue" onclick="completeLinkTask('https://t.me/EarnVerse_RedeemCode', 150)">Join</button>
+
+        <h3 class="section-title">Join Telegram & Earn BDT</h3>
+        <div class="task-list">
+            <div class="task-card">
+                <div class="task-info">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" class="task-icon" alt="Telegram">
+                    <div>
+                        <h4>Join Telegram Community</h4>
+                        <span class="reward-text">+5 BDT</span>
+                    </div>
+                </div>
+                <button class="task-btn" id="tgCommBtn" onclick="window.open('https://t.me/EarnVerse_Community', '_blank')">Go</button>
+            </div>
+            <div class="task-card">
+                <div class="task-info">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" class="task-icon" alt="Telegram">
+                    <div>
+                        <h4>Join Redeem Code Channel</h4>
+                        <span class="reward-text">+5 BDT</span>
+                    </div>
+                </div>
+                <button class="task-btn" id="tgRedeemBtn" onclick="window.open('https://t.me/EarnVerse_RedeemCode', '_blank')">Go</button>
+            </div>
+        </div>
+
+        <h3 class="section-title">Visit Direct Links & Earn Coins</h3>
+        <div class="task-list" id="directLinksContainer">
+            <!-- Dynamic Links can be added here -->
         </div>
     </div>
 
     <!-- ================= 5. WALLET PAGE ================= -->
-    <div id="wallet-page" class="page container">
-        <h3 style="margin-top:0;">WITHDRAWAL METHODS</h3>
-        <div class="card flex-between" style="border-left: 4px solid #f97316;">
-            <div><h4 style="margin:0;">Nagad</h4></div><button class="btn btn-dark" onclick="requestWithdraw('Nagad')">Select</button>
-        </div>
-        <div class="card flex-between" style="border-left: 4px solid #e11d48;">
-            <div><h4 style="margin:0;">bKash</h4></div><button class="btn btn-dark" onclick="requestWithdraw('bKash')">Select</button>
-        </div>
-        <div class="card flex-between" style="border-left: 4px solid #9333ea;">
-            <div><h4 style="margin:0;">Rocket</h4></div><button class="btn btn-dark" onclick="requestWithdraw('Rocket')">Select</button>
+    <div class="wallet-container page" id="wallet-page">
+        <h3 class="section-title">WITHDRAWAL METHODS</h3>
+        <div class="withdrawal-section">
+            <div class="methods-list">
+                <div class="method-card">
+                    <img src="https://play-lh.googleusercontent.com/IuX_25U3oW9J0n2wS7AALy-y5uV8tO4wFw9U4cK-hXJd-nC0cK9_xS9C0D3_S1T8Sg" class="method-icon" alt="Nagad">
+                    <span class="method-name">Nagad</span>
+                    <button class="select-btn" onclick="openModal('withdrawModal')">Select</button>
+                </div>
+                <div class="method-card">
+                    <img src="https://play-lh.googleusercontent.com/1-qcb-V6o6n-s-1O1pP8D2_GXZGkH-8zD3_E-QvQ7wV7I0S5c8M5e4V3a6D2V5U3-5M" class="method-icon" alt="bKash">
+                    <span class="method-name">bKash</span>
+                    <button class="select-btn" onclick="openModal('withdrawModal')">Select</button>
+                </div>
+                <div class="method-card">
+                    <img src="https://play-lh.googleusercontent.com/0Fz0zQz0x-5s5d4w4z0_k0k8z2q0_A5K6A8_2q7D0O-0m0uV0N1R2z5X1c9k1n2m9Q" class="method-icon" alt="Rocket">
+                    <span class="method-name">Rocket</span>
+                    <button class="select-btn" onclick="openModal('withdrawModal')">Select</button>
+                </div>
+            </div>
+            
+            <div class="condition-box">
+                <span class="info-icon">ℹ️</span>
+                <p><strong>Withdrawal Conditions:</strong> Minimum 1000 BDT & 10 Referrals required for first withdrawal.</p>
+            </div>
+        </div> 
+
+        <h3 class="section-title">REFERRAL PROGRAM</h3>
+        <div class="referral-card">
+            <p class="ref-desc">আপনি পাবেন <b>১০ টাকা</b> এবং আপনার বন্ধু জয়েন করলেই পাবে <b>৫ টাকা</b> বোনাস!</p>
+            <div class="ref-link-box">
+                <input type="text" id="myReferralLink" value="https://t.me/EarnVerse_Bot?start=user_12345" readonly>
+                <div class="ref-actions">
+                    <button class="copy-btn" onclick="copyRefLink()">COPY</button>
+                    <button class="share-btn" onclick="shareRefLink()">SHARE</button>
+                </div>
+            </div>
         </div>
 
-        <div class="card">
-            <h4 style="margin-top:0;">REFERRAL PROGRAM</h4>
-            <p style="font-size: 12px; color: var(--text-muted);">Total Referrals: <span id="referral-count" style="color:white; font-weight:bold;">0</span></p>
-            <div style="background: #334155; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom:10px; word-break: break-all;">
-                https://t.me/EarnVerseBot?start=user123
+        <h3 class="section-title">YOUR TEAM</h3>
+        <div class="team-card">
+            <div class="team-stats">
+                <span>Total Members: <b id="totalRefsUI">0</b></span>
+                <span style="color: #94a3b8; font-size: 13px;">Active Today: <b>0</b></span>
             </div>
-            <div class="card" style="background: rgba(251, 191, 36, 0.1); border: 1px solid var(--gold); padding:10px;">
-                <p style="margin:0; font-size: 12px; color: var(--gold); text-align:center;">
-                    <i class="fas fa-money-bill-wave"></i> <b>MONTHLY SALARY UNLOCK</b><br>
-                    1000 Referrals unlock 1% Monthly Salary
-                </p>
+            <button class="view-details-btn" onclick="openModal('teamModal')">View Details</button>
+        </div>
+
+        <div class="salary-notice">
+            <div class="salary-icon">$</div>
+            <div>
+                <h4>MONTHLY SALARY UNLOCK NOTICE</h4>
+                <p>Notice: 1000 Referrals unlock Monthly Salary. Get 1% of your team's income on the 1st of every month!</p>
             </div>
+        </div>
+    </div>
+
+    <!-- ================= MODALS ================= -->
+    <div class="modal-overlay" id="leaderboardModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeModal('leaderboardModal')">&times;</span>
+            <h3 style="margin-bottom: 15px;">Lucky Draw Leaderboard</h3>
+            <div class="leaderboard-list" id="leaderboardList"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="miningModal">
+        <div class="mining-box">
+            <span class="close-modal" onclick="closeModal('miningModal')" style="color: white; right: 20px; top: 20px; font-size:24px; position:absolute; cursor:pointer;">&times;</span>
+            <div class="mining-header">
+                <span class="mining-balance"><span id="mineBalanceUI">0</span></span>
+            </div>
+            <div class="mining-display">
+                <div class="timer"><span id="miningTimer">24h 00m to stop</span></div>
+                <div class="mined-amount"><span id="currentMined">0.0000</span></div>
+                <div class="mining-rate-row">
+                    <span class="rate"><span id="mineRateUI">41.6</span>/h</span>
+                    <button class="boost-btn">BOOST</button>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="miningProgress" style="width: 50%;"></div>
+                </div>
+                <button class="claim-mine-btn">CLAIM COINS</button>
+            </div>
+            <div class="mining-upgrades">
+                <button class="upgrade-btn speed-btn">SPEED UP <br><small>Cost: 500</small></button>
+                <button class="upgrade-btn storage-btn">ADD STORAGE <br><small>Cost: 500</small></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="drawModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeModal('drawModal')">&times;</span>
+            <h3>Lucky Draw Prize Pool</h3>
+            <p class="modal-desc" style="font-size:12px; color:#64748b;">প্রতি মাসের শেষে অ্যাডমিন দ্বারা লাকি ড্র পরিচালিত হবে।</p>
+            <div class="prize-list">
+                <div class="prize-item rank-1"><span>1st Rank</span><b>10,000 BDT</b></div>
+                <div class="prize-item rank-2"><span>2nd - 10th Rank</span><b>500 BDT (Each)</b></div>
+                <div class="prize-item rank-3"><span>11th - 50th Rank</span><b>50 BDT (Each)</b></div>
+            </div>
+            <button class="modal-btn" onclick="closeModal('drawModal')">Got It</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="addCoinsModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeModal('addCoinsModal')">&times;</span>
+            <h3>Add More Coins to Draw</h3>
+            <p class="modal-desc" style="font-size:12px; color:#64748b;">যত বেশি কয়েন যুক্ত করবেন, ১ম হওয়ার সুযোগ তত বাড়বে!</p>
+            <input type="number" id="extraCoinsInput" placeholder="Enter coins (e.g. 1000)" class="modal-input">
+            <button class="modal-btn" onclick="alert('Coins added!'); closeModal('addCoinsModal')">Add Coins</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal-box wallet-modal">
+            <span class="close-modal" onclick="closeModal('withdrawModal')">&times;</span>
+            <h3 id="withdrawMethodTitle">Withdraw</h3>
+            <p style="color:#94a3b8; font-size: 13px; margin-bottom:15px;">Enter your account number and amount.</p>
+            <input type="number" id="withdrawNumber" placeholder="Account Number" class="modal-input">
+            <input type="number" id="withdrawAmount" placeholder="Amount (Min 1000 BDT)" class="modal-input">
+            <button class="modal-btn" style="background:#3b82f6;" onclick="requestWithdraw('Selected Method')">Submit Request</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="teamModal">
+        <div class="team-modal-box">
+            <span class="close-modal" onclick="closeModal('teamModal')" style="position:absolute; right: 15px; top: 15px; font-size:24px; cursor:pointer;">&times;</span>
+            <h3 style="margin-bottom: 5px;">Your Team Details</h3>
+            <div class="salary-progress-box">
+                <span>Salary Unlock Progress: <b id="salaryProgressText">0/1000</b></span>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="salaryProgressBar" style="width: 0%;"></div>
+                </div>
+                <small style="color: #cbd5e1;">১০০০ রেফার পূর্ণ হলে প্রতি মাসের ১ তারিখে ১% কমিশন স্যালারি হিসেবে যুক্ত হবে।</small>
+            </div>
+            <div class="team-list-header">
+                <span>User</span>
+                <span>Earned</span>
+                <span>1% Comm.</span>
+            </div>
+            <div class="team-list" id="teamMembersList"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeModal('profileModal')">&times;</span>
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:65px; height:65px; margin-bottom: 10px;">
+            <h3 style="margin:0 0 15px;">Profile & Settings</h3>
+            <div class="setting-item"><span>User ID</span> <b id="prof-user-id">#Loading</b></div>
+            <div class="setting-item"><span>Name</span> <b>User</b></div>
+            <div class="setting-item"><span>Language</span> <b>Bangla</b></div>
+            <div class="setting-item"><span>Notifications</span> <b>Enabled</b></div>
+            <button class="modal-btn" style="background:#ef4444; margin-top:15px;" onclick="closeModal('profileModal')">Close</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="notificationModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeModal('notificationModal')">&times;</span>
+            <h3 style="margin:0 0 15px;">Notifications</h3>
+            <div style="text-align: left; background: #f8f9fb; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 12px;">
+                <b>Welcome Bonus!</b><br>You received 15 TK welcome reward.
+            </div>
+            <div style="text-align: left; background: #f8f9fb; padding: 10px; border-radius: 8px; font-size: 12px;">
+                <b>Lucky Wheel Ready</b><br>Enter your redeem code to spin.
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="redeemModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeModal('redeemModal')">&times;</span>
+            <h3 style="margin:0;">Lucky Wheel</h3>
+            <p style="font-size:12px; color:#64748b; margin-bottom: 10px;">Enter your redeem code below</p>
+            <input type="text" id="promoCodeInput" class="modal-input" placeholder="ENTER REDEEM CODE">
+            <button class="modal-btn" onclick="claimPromo()">Verify & Spin</button>
         </div>
     </div>
 
@@ -266,17 +780,22 @@
         <div class="nav-item" onclick="switchMainPage('wallet', this)"><i class="fas fa-wallet"></i>Wallet</div>
     </div>
 
-    <!-- ================= SCRIPT 1: APP LOGIC & UI HANDLER ================= -->
-    <script>
-        // ১. টেলিগ্রাম SDK ইনিশিয়ালাইজেশন (অ্যাপ ফুলস্ক্রিন করার জন্য)
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-        }
+    <!-- ================= SCRIPT LOGIC ================= -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ২. ইউজার আইডি হ্যান্ডলিং
+        // Firebase Configuration (WARNING: Protect this with backend/Firebase Rules in production)
+        const firebaseConfig = { apiKey: "AIzaSyCoAy1B7soteXQXSVQMU5iEXFvaRSzZ1-0", authDomain: "earnverse-app.firebaseapp.com", projectId: "earnverse-app", storageBucket: "earnverse-app.firebasestorage.app", messagingSenderId: "782597653547", appId: "1:782597653547:web:08dc2bb9a142b65799566e" };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Global Variables
+        window.userData = { id: "", username: "Player", coins: 0, tk: 0, referrals: 0, usedPromoCodes: [], adCooldowns: {} };
+
+        // Identify User
         let currentUserId = localStorage.getItem("earnverse_uid");
-
         if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe?.user) {
             const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
             currentUserId = "tg_" + tgUser.id;
@@ -285,252 +804,241 @@
             currentUserId = "web_" + Math.random().toString(36).substring(2, 15) + Date.now();
             localStorage.setItem("earnverse_uid", currentUserId);
         }
+        window.userData.id = currentUserId;
+        document.getElementById('prof-user-id').innerText = "#" + currentUserId.substring(0,8);
 
-        // ইউজারের ডাটা অবজেক্ট
-        var userData = { 
-            id: currentUserId, 
-            username: "Player", 
-            coins: 0, 
-            tk: 0, 
-            referrals: 0, 
-            usedPromoCodes: [],
-            adCooldowns: {}
-        };
-
-        // পেজ নেভিগেশন
-        function switchMainPage(pageId, element) {
+        // Navigation
+        window.switchMainPage = function(pageId, element) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(pageId + '-page').classList.add('active');
             element.classList.add('active');
-        }
+        };
 
-        function switchSubTab(element, targetId) {
-            document.querySelectorAll('.game-nav span').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.sub-page').forEach(s => s.style.display = 'none');
-            element.classList.add('active');
-            document.getElementById(targetId).style.display = 'block';
-        }
-
-        function switchAdTab(targetId, btn) {
+        window.switchAdTab = function(targetId, btn) {
             document.querySelectorAll('.ad-tab-content').forEach(tab => tab.style.display = 'none');
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(targetId).style.display = 'block';
             btn.classList.add('active');
+        };
+
+        window.openModal = function(id) { document.getElementById(id).style.display = 'flex'; };
+        window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; };
+
+        // UI Update
+        window.updateUI = function() {
+            document.getElementById('ui-coin-balance').innerText = window.userData.coins;
+            document.getElementById('home-coin').innerText = window.userData.coins;
+            document.getElementById('home-tk').innerText = (window.userData.tk || 0).toFixed(2);
+            document.getElementById('totalRefsUI').innerText = window.userData.referrals;
+            window.saveDataToFirebase();
+        };
+
+        window.saveDataToFirebase = async function() {
+            try {
+                await setDoc(doc(db, "users", window.userData.id), {
+                    coins: window.userData.coins,
+                    tk: window.userData.tk,
+                    referrals: window.userData.referrals,
+                    usedPromoCodes: window.userData.usedPromoCodes,
+                    adCooldowns: window.userData.adCooldowns,
+                    lastActive: new Date().toISOString()
+                }, { merge: true });
+            } catch (e) {
+                console.log("Firebase Save Error:", e);
+            }
+        };
+
+        async function loadLifetimeData() {
+            try {
+                const userRef = doc(db, "users", window.userData.id);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    const savedData = userSnap.data();
+                    window.userData.coins = savedData.coins || 0;
+                    window.userData.tk = savedData.tk || 0;
+                    window.userData.referrals = savedData.referrals || 0;
+                    window.userData.usedPromoCodes = savedData.usedPromoCodes || [];
+                    window.userData.adCooldowns = savedData.adCooldowns || {};
+                }
+                updateUI();
+                renderAdBoxes();
+                loadGames();
+            } catch (e) {
+                console.error("Data Load Error:", e);
+                updateUI();
+                renderAdBoxes();
+                loadGames();
+            }
         }
 
-        function updateUI() {
-            document.getElementById('ui-coin-balance').innerText = userData.coins;
-            document.getElementById('home-coin').innerText = userData.coins;
-            document.getElementById('home-tk').innerText = (userData.tk || 0).toFixed(2);
-            document.getElementById('lead-coin').innerText = userData.coins;
-            document.getElementById('referral-count').innerText = userData.referrals;
-        }
-
-        function triggerSave() {
-            if (window.saveDataToFirebase) window.saveDataToFirebase();
-        }
-
-        // ৩০টি অ্যাড বক্স তৈরি করার ফাংশন
-        function renderAdBoxes() {
+        // Ads System
+        window.renderAdBoxes = function() {
             const monetagGrid = document.getElementById('monetag-grid');
             const adsterraGrid = document.getElementById('adsterra-grid');
             const adsgramGrid = document.getElementById('adsgram-grid');
-            
             if(!monetagGrid) return;
-            monetagGrid.innerHTML = ''; adsterraGrid.innerHTML = ''; adsgramGrid.innerHTML = '';
+
+            monetagGrid.innerHTML = ""; adsterraGrid.innerHTML = ""; adsgramGrid.innerHTML = "";
 
             for (let i = 1; i <= 30; i++) {
                 let network = i <= 10 ? 'Monetag' : (i <= 20 ? 'Adsterra' : 'Adsgram');
-
-                let lastWatched = (userData.adCooldowns && userData.adCooldowns['box_' + i]) || 0;
-                let isClaimed = (Date.now() - lastWatched) < (24 * 60 * 60 * 1000); // 24 Hours Lock
+                let lastWatched = (window.userData.adCooldowns && window.userData.adCooldowns['box_' + i]) || 0;
+                let isClaimed = (Date.now() - lastWatched) < (24 * 60 * 60 * 1000); 
 
                 let boxHTML = `
-                    <div class="ad-box ${isClaimed ? 'claimed' : ''}" id="box-ui-${i}">
-                        <div class="ad-box-header">Box ${i}</div>
-                        <div class="ad-box-img" onclick="${isClaimed ? 'showCooldownAlert()' : `startAdWatch(${i}, '${network}')`}">
-                            <i class="fas ${isClaimed ? 'fa-check-circle' : 'fa-play-circle'}"></i>
-                        </div>
-                        <div class="ad-box-footer" id="box-txt-${i}">${isClaimed ? 'Claimed<br>(Wait 24h)' : 'Watch Ads<br>+0.50 TK'}</div>
+                <div class="ad-box ${isClaimed ? 'claimed' : ''}" id="box-ui-${i}">
+                    <div class="ad-box-header">Box ${i}</div>
+                    <div class="ad-box-img" onclick="${isClaimed ? 'showCooldownAlert()' : `startAdWatch(${i}, '${network}')`}">
+                        <i class="fas ${isClaimed ? 'fa-check-circle' : 'fa-play-circle'}"></i>
                     </div>
-                `;
+                    <div class="ad-box-footer" id="box-txt-${i}">${isClaimed ? 'Claimed<br>(Wait 24h)' : 'Watch Ads<br>+0.50 TK'}</div>
+                </div>`;
 
                 if (i <= 10) monetagGrid.innerHTML += boxHTML;
                 else if (i <= 20) adsterraGrid.innerHTML += boxHTML;
                 else adsgramGrid.innerHTML += boxHTML;
             }
-        }
+        };
 
-        // অ্যাড দেখা ও ১৫ সেকেন্ডের টাইমার
-        function startAdWatch(boxNum, network) {
+        window.startAdWatch = function(boxNum, network) {
             document.getElementById(`box-txt-${boxNum}`).innerHTML = "Watching...<br>15s";
-
-            if (network === 'Monetag') {
-                if (typeof show_11884671 === 'function') { show_11884671(); }
-                else { alert("Monetag অ্যাড লোড হচ্ছে না।"); return; }
-            } 
-            else if (network === 'Adsterra') {
+            
+            if (network === 'Monetag' && typeof show_11884671 === 'function') {
+                show_11884671();
+            } else if (network === 'Adsterra') {
                 window.open("https://www.highcpmgate.com/31397356", "_blank");
-            } 
-            else if (network === 'Adsgram') {
-                if (window.Adsgram) {
-                    const AdController = window.Adsgram.init({ blockId: "49711" });
-                    AdController.show().catch((err) => console.log("Adsgram Error: ", err));
-                } else { alert("Adsgram লোড হতে সমস্যা হচ্ছে।"); return; }
+            } else if (network === 'Adsgram' && window.Adsgram) {
+                const AdController = window.Adsgram.init({ blockId: "49711" });
+                AdController.show().catch((err) => console.log("Adsgram Error: ", err));
             }
 
             setTimeout(() => {
-                userData.tk = (userData.tk || 0) + 0.50;
-                if(!userData.adCooldowns) userData.adCooldowns = {};
-                userData.adCooldowns['box_' + boxNum] = Date.now();
-                
-                updateUI(); 
-                triggerSave();
-                
+                window.userData.tk = (window.userData.tk || 0) + 0.50;
+                if(!window.userData.adCooldowns) window.userData.adCooldowns = {};
+                window.userData.adCooldowns['box_' + boxNum] = Date.now();
+                updateUI();
                 alert(`Box ${boxNum} দেখা সম্পন্ন! ০.৫০ টাকা যোগ হয়েছে।`);
                 renderAdBoxes();
-            }, 15000); 
-        }
+            }, 15000);
+        };
 
-        function showCooldownAlert() { alert("আপনি এটি ইতিমধ্যে দেখেছেন। ২৪ ঘণ্টা পর আবার দেখতে পারবেন।"); }
+        window.showCooldownAlert = function() { alert("আপনি এটি ইতিমধ্যে দেখেছেন। ২৪ ঘণ্টা পর আবার দেখতে পারবেন।"); };
 
-        function watchReelsTask() {
-            window.open('https://youtube.com/shorts/', '_blank'); 
+        window.watchReelsTask = function() {
+            window.open('https://youtube.com/shorts/', '_blank');
             setTimeout(() => {
-                userData.coins += 100; updateUI(); triggerSave();
+                window.userData.coins += 100; updateUI();
                 alert("Reel দেখা সম্পন্ন! ১০০ কয়েন যোগ হয়েছে।");
             }, 15000);
-        }
+        };
 
-        function completeMicroTask(url, taskNum) {
+        window.completeMicroTask = function(url, taskNum) {
             window.open(url, '_blank');
             setTimeout(() => {
-                userData.coins += 50; updateUI(); triggerSave();
-                alert(`Task ${taskNum} কমপ্লিট! ৫০ কয়েন যোগ হয়েছে।`);
+                window.userData.coins += 50; updateUI();
+                alert(`Task ${taskNum} কমপ্লিট! ৫০ কয়েন যোগ হয়েছে।`);
             }, 15000);
-        }
-
-        function completeLinkTask(url, reward) {
-            window.open(url, "_blank");
-            setTimeout(() => { 
-                userData.coins += reward; updateUI(); triggerSave(); 
-                alert(reward + " Coins Added!"); 
-            }, 3000);
-        }
-
-        // Promo Code System
-        const validCodes = Array.from({length: 200}, (_, i) => "EV-" + String(i + 1).padStart(3, '0'));
-        function claimPromo() {
-            let inputCode = document.getElementById('promoCodeInput').value.trim().toUpperCase();
-            if(!validCodes.includes(inputCode)) { alert("দুঃখিত, কোডটি সঠিক নয়!"); return; }
-            if(userData.usedPromoCodes.includes(inputCode)) { alert("আপনি এই কোডটি ইতিমধ্যেই ব্যবহার করেছেন!"); return; }
-            
-            userData.usedPromoCodes.push(inputCode);
-            userData.coins += 100; 
-            alert("অভিনন্দন! ১০০ কয়েন যুক্ত হয়েছে।");
-            
-            updateUI(); triggerSave();
-            document.getElementById('promoCodeInput').value = "";
-        }
-
-        function requestWithdraw(method) {
-            if (userData.tk < 1000) { alert(`উত্তোলনের জন্য অন্তত ১০০০ টাকা লাগবে।`); } 
-            else if (userData.referrals < 10) { alert(`উত্তোলনের জন্য ১০টি রেফারেল লাগবে।`); } 
-            else { alert(method + " উইথড্র সফল!"); userData.tk -= 1000; updateUI(); triggerSave(); }
-        }
-
-        function loadGames() {
-            const container = document.getElementById('game-monetize-container');
-            if(!container) return;
-            const games = ["Astro Blaze", "Coin Runner", "Puzzle Earn", "Speed Racer"];
-            container.innerHTML = "";
-            games.forEach(g => {
-                container.innerHTML += `
-                    <div class="game-box">
-                        <div style="background:#334155; width:100%; height:100px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-gamepad" style="font-size:30px; color:#94a3b8;"></i></div>
-                        <h4>${g}</h4>
-                        <button class="btn btn-blue" onclick="completeLinkTask('https://gamemonetize.com', 10)">Play (+10 Coins)</button>
-                    </div>`;
-            });
-        }
-
-        // অ্যাপ চালুর সাথে সাথে UI তৈরি করা
-        updateUI();
-        renderAdBoxes();
-        loadGames();
-    </script>
-
-    <!-- ================= SCRIPT 2: FIREBASE PERSISTENT DATABASE ================= -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyCoAy1B7soteXQXSVQMU5iEXFvaRSzZ1-0",
-            authDomain: "earnverse-app.firebaseapp.com",
-            projectId: "earnverse-app",
-            storageBucket: "earnverse-app.firebasestorage.app",
-            messagingSenderId: "782597653547",
-            appId: "1:782597653547:web:08dc2bb9a142b65799566e"
         };
-        
-        try {
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
 
-            // আজীবনের সেভ থাকা ডাটা ফায়ারবেস থেকে লোড করা
-            async function loadLifetimeData() {
-                try {
-                    const userRef = doc(db, "users", userData.id);
-                    const userSnap = await getDoc(userRef);
+        window.completeLinkTask = function(url, reward) {
+            window.open(url, "_blank");
+            setTimeout(() => {
+                window.userData.coins += reward; updateUI();
+                alert(reward + " Coins Added!");
+            }, 3000);
+        };
 
-                    if (userSnap.exists()) {
-                        const savedData = userSnap.data();
-                        userData.coins = savedData.coins || 0;
-                        userData.tk = savedData.tk || 0;
-                        userData.referrals = savedData.referrals || 0;
-                        userData.usedPromoCodes = savedData.usedPromoCodes || [];
-                        userData.adCooldowns = savedData.adCooldowns || {};
-                    } else {
-                        window.saveDataToFirebase();
-                    }
-                    
-                    updateUI();
-                    renderAdBoxes();
-                    loadGames();
-                } catch (e) {
-                    console.error("Data Load Error:", e);
-                    updateUI();
-                    renderAdBoxes();
-                    loadGames();
-                }
-            }
-
-            loadLifetimeData();
-
-            // ফায়ারবেসে ডাটা সেভ রাখার ফাংশন
-            window.saveDataToFirebase = async function() {
-                try {
-                    await setDoc(doc(db, "users", userData.id), {
-                        coins: userData.coins, 
-                        tk: userData.tk, 
-                        referrals: userData.referrals,
-                        usedPromoCodes: userData.usedPromoCodes,
-                        adCooldowns: userData.adCooldowns,
-                        lastActive: new Date().toISOString()
-                    }, { merge: true });
-                } catch (e) { 
-                    console.log("Firebase Save Error:", e); 
-                }
-            };
-
-        } catch (err) {
-            console.log("Firebase Load Failed.", err);
+        // Promo Codes
+        const validCodes = Array.from({length: 200}, (v, i) => "EV-" + String(i + 1).padStart(3, '0'));
+        window.claimPromo = function() {
+            let inputCode = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+            if(!validCodes.includes(inputCode)) { alert("দুঃখিত, কোডটি সঠিক নয়!"); return; }
+            if(window.userData.usedPromoCodes.includes(inputCode)) { alert("আপনি এই কোডটি ইতিমধ্যেই ব্যবহার করেছেন!"); return; }
+            
+            window.userData.usedPromoCodes.push(inputCode);
+            window.userData.coins += 100;
+            alert("অভিনন্দন! ১০০ কয়েন যুক্ত হয়েছে।");
             updateUI();
-            renderAdBoxes();
-            loadGames();
-        }
+            document.getElementById('promoCodeInput').value = "";
+            closeModal('redeemModal');
+        };
+
+        window.requestWithdraw = function(method) {
+            if (window.userData.tk < 1000) { alert('উত্তোলনের জন্য অন্তত ১০০০ টাকা লাগবে।'); }
+            else if (window.userData.referrals < 10) { alert('উত্তোলনের জন্য ১০টি রেফারেল লাগবে।'); }
+            else { 
+                alert("উইথড্র রিকোয়েস্ট সফল!"); 
+                window.userData.tk -= 1000; 
+                updateUI(); 
+                closeModal('withdrawModal');
+            }
+        };
+
+        let allGamesData = []; // ১০০টি গেম জমা রাখার গ্লোবাল ভ্যারিয়েবল
+
+window.loadGames = async function() {
+    const container = document.getElementById('game-monetize-container');
+    if (!container) return;
+
+    container.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #94a3b8; padding: 20px;">গেমগুলো লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</p>';
+
+    const feedUrl = 'https://gamemonetize.com/feed.php?format=0&num=100&page=1';
+
+    try {
+        const response = await fetch(feedUrl);
+        allGamesData = await response.json();
+
+        renderGames(allGamesData);
+
+    } catch (error) {
+        console.error("GameMonetize API Error:", error);
+        container.innerHTML = "<p style='grid-column: span 2; text-align: center; color: #ef4444;'>গেম লোড করতে সমস্যা হয়েছে!</p>";
+    }
+};
+
+function renderGames(gamesList) {
+    const container = document.getElementById('game-monetize-container');
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (gamesList && gamesList.length > 0) {
+        gamesList.forEach(game => {
+            const gameTitle = game.title || "Play Game";
+            const gameThumb = game.thumb || "https://via.placeholder.com/150";
+            const gameUrl = game.url;
+
+            container.innerHTML += `
+                <div class="game-box">
+                    <img src="${gameThumb}" alt="${gameTitle}">
+                    <h4 style="height:30px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">${gameTitle}</h4>
+                    <button class="btn btn-purple" onclick="completeLinkTask('${gameUrl}', 20)">Play (+20 Coins)</button>
+                </div>`;
+        });
+    } else {
+        container.innerHTML = "<p style='grid-column: span 2; text-align: center; color: #ef4444; padding: 20px;'>এই ক্যাটাগরিতে কোনো গেম পাওয়া যায়নি!</p>";
+    }
+}
+
+function filterCategory(categoryName, btnElement) {
+    if (btnElement) {
+        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+    }
+
+    if (categoryName === 'ALL') {
+        renderGames(allGamesData);
+    } else {
+        const filteredGames = allGamesData.filter(game => 
+            game.category && game.category.toLowerCase().includes(categoryName.toLowerCase())
+        );
+        renderGames(filteredGames);
+    }
+}
+        // Initial Load
+        loadLifetimeData();
+       loadGames();
     </script>
 </body>
-                                                                                                        </html>
+</html>
